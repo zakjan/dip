@@ -1,0 +1,44 @@
+\section{Cipher suites}
+
+TLS is great in flexibility which provides for using various cryptographic primitives in a common framework. A selection of cryptographic primitives and their parameters is called \textit{cipher suite}.
+
+A cipher suite is defined roughly by the following attributes:
+
+\begin{itemize}
+  \item Key exchange algorithm
+  \item Authentication algorithm
+  \item Encryption algorithm
+  \begin{itemize}
+    \item cipher algorithm
+    \item key size
+    \item cipher mode
+  \end{itemize}
+  \item MAC algorithm
+  \item Pseudorandom function
+\end{itemize}
+
+Cipher suite names are usually long, descriptive and consistent. They are made from names of the key exchange method, authentiction method, encryption method and optional MAC or PRF algorithm.
+
+\begin{sidewaystable}
+  \hspace{-0.5cm} % hack (wide table)
+  \csvreader[
+    after head=\begin{tabular}{lllllll}\toprule\csvlinetotablerow\\\midrule,
+    late after line=\\,
+    late after last line=\\\bottomrule\end{tabular}
+  ]
+    {tables/tls-cipher-suites.csv}{}
+    {\texttt{\csvcoli} & \texttt{\csvcolii} & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi & \csvcolvii}
+
+  \todo{Better examples}
+  \caption{Example cipher suites and their security properties}
+\end{sidewaystable}
+
+
+
+\subsection{Key exchange}
+
+\subsection{Authentication}
+
+\subsection{Encryption}
+
+\subsection{Message authentication}

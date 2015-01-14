@@ -1,0 +1,52 @@
+\documentclass[thesis=M,english]{FITthesis}[2012/06/26]
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{csvsimple}
+\usepackage{rotating}
+\usepackage{subcaption}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{blindtext}
+\usepackage{dirtree}
+
+
+\newcommand{\myblindtext}{\textcolor{Gray}{\blindtext}}
+\newcommand{\myBlindtext}{\textcolor{Gray}{\Blindtext}}
+\newcommand{\todo}[1]{\textcolor{red}{[[#1]]}}
+\newcommand{\edit}[1]{\textcolor{blue}{#1}}
+
+
+\department{Department of Computer Systems}
+\title{Current development of authenticated encryption and its usage in TLS protocol}
+\authorGN{Jan}
+\authorFN{Žák}
+\authorWithDegrees{Bc. Jan Žák}
+\supervisor{prof. Ing. Róbert Lórencz, CSc.}
+\acknowledgements{\todo{Acknowledgements}}
+\abstractEN{\todo{Summarize the contents and contribution of your work in a few sentences in English language.}}
+\abstractCS{\todo{V několika větách shrňte obsah a přínos této práce v českém jazyce.}}
+\placeForDeclarationOfAuthenticity{Prague}
+\declarationOfAuthenticityOption{4} % TODO
+\keywordsCS{\todo{Replace with comma-separated list of keywords in Czech.}}
+\keywordsEN{\todo{Replace with comma-separated list of keywords in English.}}
+
+
+\begin{document}
+
+
+\input{text/intro.tex}
+\input{text/tls.tex}
+\input{text/aead.tex}
+\input{text/realisation.tex}
+\input{text/testing.tex}
+\input{text/result.tex}
+\input{text/bibliography.tex}
+\appendix
+\input{text/acronyms.tex}
+\input{text/cd.tex}
+
+
+\end{document}

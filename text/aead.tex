@@ -1,0 +1,38 @@
+\chapter{Authenticated Encryption}
+
+\todo{popis AEAD}
+
+\section{Block cipher modes}
+
+from 70s
+
+\begin{description}
+  \item[ECB]
+  \item[CBC]
+  \item[CFB]
+  \item[OFB]
+  \item[CTR]
+\end{description}
+
+\todo{Block cipher modes image from @angealbertini}
+
+Exploiting malleability:
+
+ECB: Rearrange, replay blocks
+CTR, OFB: Bitwise modification of blocks
+CBC: Change current ciphertext block to predictably change the next plaintext block (during decryption)
+
+Chosen-boundary attacks:
+
+ECB, CBC, CFB: Partial chosen-plaintext control
+Decrypt messages byte by byte
+
+Here come the XOR ninjas
+
+\section{Authenticated Encryption}
+\section{Authenticated Encryption with Associated Data}
+
+
+
+\input{text/aead-generic.tex}
+\input{text/aead-caesar.tex}

@@ -1,0 +1,43 @@
+\subsection{NORX}
+
+NO(T A)RX
+
+ARX - Addition, Rotation, XOR
+
+\subsubsection{Design goals}
+
+\begin{itemize}
+  \item \textbf{High security}
+  \item \textbf{High speed} (in SW \textit{and} HW)
+  \item \textbf{Simplicity} (of spec \textit{and} code)
+  \item Online / one-pass
+  \item Scalability (parallelism, unrolling)
+  \item High key agility (no "key schedule")
+  \item Side-channel leaks robustness (esp. timings)
+\end{itemize}
+
+\subsubsection{Parameters}
+
+\begin{description}
+  \item[Word Bit Size] $W \in {32, 64}$
+  \item[Number of Rounds] $1 \leq R \leq 63$
+  \item[Parallelism Degree] $0 \leq D \leq 255$ (0?)
+  \item[Tag Bit Size] $|A| \leq 10W$
+\end{description}
+
+\begin{table}
+  \centering
+  \csvreader[
+    after head=\begin{tabular}{llll}\toprule\csvlinetotablerow\\\midrule,
+    late after line=\\,
+    late after last line=\\\bottomrule\end{tabular}
+  ]
+    {tables/norx-proposed-instances.csv}{}
+    {\texttt{\csvcoli} & \csvcolii & \csvcoliii & \csvcoliv}
+
+  \caption{NORX proposed instances}
+\end{table}
+
+R=6: higher security margin
+
+D=4: high throughput on parallel architectures
