@@ -1,4 +1,37 @@
 \begin{introduction}
-  \todo{Why TLS}
-  \todo{Why constant crypto improvement is necessary}
+
+\color{blue}
+
+Over the last 25 years, the Web has grown into a platform for much of the world’s communication, whether it be information sharing, community building, commerce, education, social networking, or underpinning applications.
+
+In meeting these needs, the Web’s trustworthiness has become critical to its success. If a person cannot trust that they are communicating with the party they intend, they can’t use the Web to shop safety; if they cannot be assured that Web-delivered news isn’t modified in transit, they won’t trust it as much. If someone cannot be assured that they’re talking only to the intended recipients, they might avoid social networking.
+
+These important properties of authentication, integrity and increased confidentiality are currently best provided on the Web by Transport Layer Security (TLS) [RFC5246]. For the HTTP protocol, this means using "https://" URLs [RFC7230].
+
+In the past, Web sites have deployed HTTPS rarely; often, only when financial transactions take place. More recently, however, it has become apparent that nearly all activity on the Web can be considered sensitive, since it now plays such a central role in everyday life.
+
+At the same time, security on the Web has proven to be quite subtle. If an attacker can modify content in transit, the power of the Web platform we are defining can easily be turned against the user (or the site they are using).
+
+For example, networks can (and some do) insert advertisements into unencrypted Web pages; by nature, this conveys the ability to track users. Even more hostile attacks include inserting persistent code into the browser that is run on subsequent visits ("cache poisoning"), or changing content (such as editing a company's Web site to affect its stock price).
+
+An attacker can also access information that might have been stored by a site in previous visits. If this includes a persistent grant of access to a privileged APIs, such as geolocation [geolocation-API] or media capture [media-capture-api], then the attacker can access those resources using any prior authorization.
+
+Notably, these risks are just as present for users of "plain" Web sites as they are for those using more sophisticated, interactive sites.
+
+Also, if confidentiality is lost, something as simple as an image request "in the clear" (i.e., unencrypted) can give an attacker information about what the user is doing, opening an opportunity for further attacks -- again, even if the content being accessed seems innocuous.
+
+Finally, widespread attacks like Pervasive Monitoring [RFC7258] further erode users' trust in the Web -- whether they be activists, businesses or ordinary citizens.
+
+This leads us to a conclusion that server authentication and integrity are baseline requirements for the continued success of the Web. Furthermore, confidentiality -- while arguably not always strictly necessary -- is often needed. Since the necessity of confidentiality may only become apparent in hindsight, we should also consider it as being crucial to the continued success of the Web.
+
+Therefore, the TAG finds that:
+
+\begin{itemize}
+  \item The Web platform should be designed to \textbf{actively prefer secure communication} - typically, by encouraging use of "https://" URLs instead of "http://" ones (although exceptions like "localhost" do exist).
+  \item \textbf{Barriers to adopting "https://" should be removed} where feasible.
+  \item The \textbf{end-to-end nature of TLS encryption must not be compromised} on the Web, in order to preserve trust.
+\end{itemize}
+
+\url{http://www.w3.org/2001/tag/doc/web-https}
+
 \end{introduction}
