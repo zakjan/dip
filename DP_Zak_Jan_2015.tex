@@ -11,12 +11,22 @@
 \usepackage[usenames,dvipsnames]{color}
 \usepackage{blindtext}
 \usepackage{dirtree}
+\usepackage{pifont}
+\usepackage{tikz}
+
+\usetikzlibrary{arrows}
+\tikzset{
+  >=latex,
+  rect/.style={draw,fill=blue!10,shape=rectangle,minimum width=2cm,minimum height=0.9cm,inner sep=0.2cm},
+}
 
 
 \newcommand{\myblindtext}{\textcolor{Gray}{\blindtext}}
 \newcommand{\myBlindtext}{\textcolor{Gray}{\Blindtext}}
 \newcommand{\todo}[1]{\textcolor{red}{[[#1]]}}
 \newcommand{\edit}[1]{\textcolor{blue}{#1}}
+\newcommand{\yesMark}{\textcolor{Green}{\ding{51}}}
+\newcommand{\noMark}{\textcolor{red}{\ding{55}}}
 
 
 \department{Department of Computer Systems}
@@ -38,8 +48,8 @@
 
 
 \input{text/intro.tex}
+\input{text/crypto.tex}
 \input{text/tls.tex}
-\input{text/aead.tex}
 \input{text/realisation.tex}
 \input{text/testing.tex}
 \input{text/result.tex}
