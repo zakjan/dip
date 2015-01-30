@@ -2,6 +2,9 @@ BASENAME = DP_Zak_Jan_2015
 
 default:
 	pdflatex $(BASENAME).tex
+
+full:
+	pdflatex $(BASENAME).tex
 	bibtex $(BASENAME)
 	pdflatex $(BASENAME).tex
 	pdflatex $(BASENAME).tex
@@ -17,6 +20,3 @@ clean:
 	  $(BASENAME).out \
 	  $(BASENAME).pdf \
 	  $(BASENAME).toc
-
-watch:
-	while inotifywait -e close_write $(BASENAME).tex; do make; done

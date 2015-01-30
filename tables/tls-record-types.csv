@@ -1,0 +1,6 @@
+dec;hex;name
+20;0x14;ChangeCipherSpec
+21;0x15;Alert
+22;0x16;Handshake
+23;0x17;Application
+24;0x18;Heartbeat

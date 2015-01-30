@@ -1,8 +1,173 @@
 \subsection{Handshake protocol}
 
-\todo{Basic handshake description}
+When a client and server start communicating, they use the handshake protocol to negotiate connection parameters, authenticate each other and verify that handhshake messages haven't beed modified by an attacker. It is the most complex part of the TLS protocol, because it performs these tasks:
+
+\begin{itemize}
+  \item exchange supported capabilities and agree on shared connection parameters (TLS protocol version, cryptographic algorithms)
+  \item exchange necessary cryptographic parameters to agree on shared secret values (\textit{master secret}) using public-key cryptography
+  \item exchange certificates or other cryptographic information to authenticate one another
+  \item verify that the handshake hasn't beed tampered by a third party
+  \item verify that both parties have calculated the same secret values and they can be reliably used to transport application data via record protocol
+\end{itemize}
+
+This phase usually takes 6-13 messages in 3-4 network flights, depending on which features are used. There can be many variations in the exchange, depending on the configuration and supported protocol extensions. In practice, we can see three common flows:
+
+\begin{itemize}
+  \item full handshake with client and server authentication
+  \item basic handshake with server authentication
+  \item abbreviated handshake that resumes an earlier session
+\end{itemize}
+
+\subsubsection{Full and basic handshake}
+
+If a client and server hasn't previously communicated with each other, both parties will perform a full or basic handshake in order to establish a session. See \autoref{img:tls-full-handshake}.
+
+Full handshake requires client authentication, whereas basic handshake does not. Also it is possible to perform an anonymous handshake without any authentication, but it is not recommended, because it is sucpectible to MitM attacks.
+
+A full handshake is completed after 4 network flights before the handshake is complete and protocol parties can begin to send application data. Thus, using TLS adds a latency penalty of 2 RTTs if the client sends application data first, such as in HTTP protocol.
+
+An abbreviated handshake is completed after 3 network flights, thus adding a latency penalty of just 1 RRT if the client sends application data first.
 
 \begin{figure}
-  \includegraphics[width=\textwidth]{images/tls-handshake.png}
-  \caption{TLS handshake}
+  \centering
+  \begin{tikzpicture}
+    \node (table) [matrix,row sep=0.5*\nodeheight,column sep=2.5*\nodewidth] {
+      \node (client) [rect] {Client}; & \node (server) [rect] {Server}; \\[0.5*\nodeheight]
+      \node (client1) [circle] {1}; & \coordinate (server1); \\
+      \coordinate (client2); & \node (server2) [circle] {2}; \\
+      \coordinate (client3); & \node (server3) [circle] {3}; \\
+      \coordinate (client4); & \node (server4) [circle] {4}; \\
+      \coordinate (client5); & \node (server5) [circle] {5}; \\
+      \coordinate (client6); & \node (server6) [circle] {6}; \\
+      \node (client7) [circle] {7}; & \coordinate (server7); \\
+      \node (client8) [circle] {8}; & \coordinate (server8); \\
+      \node (client9) [circle] {9}; & \coordinate (server9); \\
+      \node (client10) [circle] {10}; & \coordinate (server10); \\
+      \node (client11) [circle] {11}; & \coordinate (server11); \\
+      \coordinate (client12); & \node (server12) [circle] {12}; \\
+      \coordinate (client13); & \node (server13) [circle] {13}; \\[0.5*\nodeheight]
+      \coordinate (client13b); & \coordinate (server13b); \\[0.5*\nodeheight]
+      \node (client14) [circle] {14}; & \node (server14) [circle] {14}; \\
+      \coordinate (client15); & \coordinate (server15); \\
+    };
+
+    \begin{pgfonlayer}{bg}
+      \path [draw,dashed] (client) -- (client15);
+      \path [draw,dashed] (server) -- (server15);
+    \end{pgfonlayer}
+    \path [line] (client1) -- (server1) node[above,near start] {\textit{ClientHello}};
+    \path [line] (server2) -- (client2) node[above,near start] {\textit{ServerHello}};
+    \path [line] (server3) -- (client3) node[above,near start] {\textit{Certificate}${}^\ast$};
+    \path [line] (server4) -- (client4) node[above,near start] {\textit{ServerKeyExchange}${}^\ast$};
+    \path [line] (server5) -- (client5) node[above,near start] {\textit{CertificateRequest}${}^\ast$};
+    \path [line] (server6) -- (client6) node[above,near start] {\textit{ServerHelloDone}};
+    \path [line] (client7) -- (server7) node[above,near start] {\textit{Certificate}${}^\ast$};
+    \path [line] (client8) -- (server8) node[above,near start] {\textit{ClientKeyExchange}};
+    \path [line] (client9) -- (server9) node[above,near start] {\textit{CertificateVerify}${}^\ast$};
+    \path [line] (client10) -- (server10) node[above,near start] {[\textit{ChangeCipherSpec}]};
+    \path [line] (client11) -- (server11) node[above,near start] {\textit{Finished}};
+    \path [line] (server12) -- (client12) node[above,near start] {[\textit{ChangeCipherSpec}]};
+    \path [line] (server13) -- (client13) node[above,near start] {\textit{Finished}};
+    \path [draw] ($(client13b)-(0.5*\nodewidth,0)$) -- ($(server13b)+(0.5*\nodewidth,0)$) node[above,midway] {handshake completed};
+    \path [line,<->] (client14) -- (server14) node[above,midway] {application data};
+
+    \node [below=0 of table,xshift=-5mm] {
+      \begin{tabular}{cl}
+        ${}^\ast$ & optional message \\
+        $[$ $]$ & ChangeCipherSpec protocol message \\
+      \end{tabular}
+    };
+  \end{tikzpicture}
+  \caption{TLS full handshake}
+  \label{img:tls-full-handshake}
 \end{figure}
+
+\begin{enumerate}
+  \item \textit{ClientHello} - client initiates a handshake, sends its capabilities to server
+  \item \textit{ServerHello} - server selects the best connection parameters supported by both parties
+  \item \textit{Certificate} - server sends its certificate chain (only if server authentication is required)
+  \item \textit{ServerKeyExchange} - server sends additional information required to generate the master secret (only if it is required by selected cipher suite)
+  \item \textit{CertificateRequest} - server requests client authentication and sends requirements for acceptable certificates (only if client authentication is required)
+  \item \textit{ServerHelloDone} - server indicates completion of its side of negotiation
+  \item \textit{Certificate} - client sends its certificate chain (only if client authentication is required)
+  \item \textit{ClientKeyExchange} - client sends additional information required to generate the master secret
+  \item \textit{CertificateVerify} - client proves the posession of private key corresponding to the previously sent client certificate (only if client authentication is required)
+  \item \textit{ChangeCipherSpec} - client notifies server, that all following messages are encrypted
+  \item \textit{Finished} - client sends a MAC of the handshake messages it sent and received
+  \item \textit{ChangeCipherSpec} - server notifies client, that all following messages are encrypted
+  \item \textit{Finished} - server sends a MAC of the handshake messages it sent and received
+  \item handshake is completed, secure communication channel is established, both parties can securely send application data
+\end{enumerate}
+
+\subsubsection{Abbreviated handshake}
+
+An abbreviated handshake is complete after 3 flights, thus adding just 1 RRT latency if the client sends application data first.
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \node (table) [matrix,row sep=0.5*\nodeheight,column sep=2.5*\nodewidth] {
+      \node (client) [rect] {Client}; & \node (server) [rect] {Server}; \\[0.5*\nodeheight]
+      \node (client1) [circle] {1}; & \coordinate (server1); \\
+      \coordinate (client2); & \node (server2) [circle] {2}; \\
+      \coordinate (client3); & \node (server3) [circle] {3}; \\
+      \coordinate (client4); & \node (server4) [circle] {4}; \\
+      \node (client5) [circle] {5}; & \coordinate (server5); \\
+      \node (client6) [circle] {6}; & \coordinate (server6); \\[0.5*\nodeheight]
+      \coordinate (client6b); & \coordinate (server6b); \\[0.5*\nodeheight]
+      \node (client7) [circle] {7}; & \node (server7) [circle] {7}; \\
+      \coordinate (client8); & \coordinate (server8); \\
+    };
+
+    \begin{pgfonlayer}{bg}
+      \path [draw,dashed] (client) -- (client8);
+      \path [draw,dashed] (server) -- (server8);
+    \end{pgfonlayer}
+    \path [line] (client1) -- (server1) node[above,near start] {\textit{ClientHello}};
+    \path [line] (server2) -- (client2) node[above,near start] {\textit{ServerHello}};
+    \path [line] (server3) -- (client3) node[above,near start] {[\textit{ChangeCipherSpec}]};
+    \path [line] (server4) -- (client4) node[above,near start] {\textit{Finished}};
+    \path [line] (client5) -- (server5) node[above,near start] {[\textit{ChangeCipherSpec}]};
+    \path [line] (client6) -- (server6) node[above,near start] {\textit{Finished}};
+    \path [draw] ($(client6b)-(0.5*\nodewidth,0)$) -- ($(server6b)+(0.5*\nodewidth,0)$) node[above,midway] {handshake completed};
+    \path [line,<->] (client7) -- (server7) node[above,midway] {application data};
+
+    \node [below=0 of table,xshift=-5mm] {
+      \begin{tabular}{cl}
+        $[$ $]$ & ChangeCipherSpec protocol message \\
+      \end{tabular}
+    };
+  \end{tikzpicture}
+  \caption{TLS abbreviated handshake}
+  \label{img:tls-abbreviated-handshake}
+\end{figure}
+
+\begin{table}
+  \centering
+  \csvreader[tabular=ccl,myTable={Dec & Hex & Name}]{tables/tls-record-types.csv}{}{\dec & \texttt{\hex} & \name}
+  \caption{TLS record types}
+\end{table}
+
+\begin{table}
+  \centering
+  \csvreader[tabular=cccl,myTable={Major & Minor & Hex & Name}]{tables/tls-versions.csv}{}{\major & \minor & \texttt{\hex} & \name}
+  \caption{TLS versions}
+\end{table}
+
+\begin{table}
+  \centering
+  \csvreader[tabular=ccl,myTable={Dec & Hex & Name}]{tables/tls-handshake-message-types.csv}{}{\dec & \texttt{\hex} & \name}
+  \caption{TLS handshake message types}
+\end{table}
+
+\begin{table}
+  \centering
+  \csvreader[tabular=cclp{7.75cm},myTable={Dec & Hex & Name}]{tables/tls-alert-message-levels.csv}{}{\dec & \texttt{\hex} & \name}
+  \caption{TLS alert message levels}
+\end{table}
+
+\begin{table}
+  \centering
+  \csvreader[tabular=ccll,myTable={Dec & Hex & Name & Level}]{tables/tls-alert-message-types.csv}{}{\dec & \texttt{\hex} & \name & \level}
+  \caption{TLS alert message types}
+\end{table}

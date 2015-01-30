@@ -1,0 +1,12 @@
+dec;hex;name
+0;0x00;HelloRequest
+1;0x01;ClientHello
+2;0x02;ServerHello
+4;0x04;NewSessionTicket
+11;0x0b;Certificate
+12;0x0c;ServerKeyExchange
+13;0x0d;CertificateRequest
+14;0x0e;ServerHelloDone
+15;0x0f;CertificateVerify
+16;0x10;ClientKeyExchange
+20;0x14;Finished

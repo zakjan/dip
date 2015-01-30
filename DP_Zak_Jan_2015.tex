@@ -8,17 +8,11 @@
 \usepackage{csvsimple}
 \usepackage{rotating}
 \usepackage{subcaption}
-\usepackage[usenames,dvipsnames]{color}
+\usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{blindtext}
 \usepackage{dirtree}
 \usepackage{pifont}
 \usepackage{tikz}
-
-\usetikzlibrary{arrows}
-\tikzset{
-  >=latex,
-  rect/.style={draw,fill=blue!10,shape=rectangle,minimum width=2cm,minimum height=0.9cm,inner sep=0.2cm},
-}
 
 
 \newcommand{\myblindtext}{\textcolor{Gray}{\blindtext}}
@@ -27,6 +21,29 @@
 \newcommand{\edit}[1]{\textcolor{blue}{#1}}
 \newcommand{\yesMark}{\textcolor{Green}{\ding{51}}}
 \newcommand{\noMark}{\textcolor{red}{\ding{55}}}
+\newcommand{\nodewidth}{2.5cm}
+\newcommand{\nodeheight}{0.6cm}
+
+\definecolor{myOrange}{RGB}{255,204,0} % #ffcc00
+
+\csvset{
+  myTable/.style={separator=semicolon,head to column names,table head=\toprule #1 \\ \midrule,table foot=\bottomrule}
+}
+
+\usetikzlibrary{arrows.meta,calc,decorations.pathreplacing,fit,matrix,positioning}
+\pgfdeclarelayer{bg}
+\pgfsetlayers{bg,main}
+\tikzset{
+  >=stealth,
+  font=\footnotesize,
+  node distance=\nodeheight,
+  rect/.style={draw,fill=myOrange,shape=rectangle,minimum width=\nodewidth,minimum height=\nodeheight,inner sep=1mm,text height=.8em,text depth=.2em},
+  circle/.style={draw,fill=myOrange,shape=circle,minimum size=\nodeheight,inner sep=0},
+  line/.style={draw,->,very thick,rounded corners},
+  struct/.style={matrix,inner sep=0,column sep=-\pgflinewidth},
+}
+
+
 
 
 \department{Department of Computer Systems}

@@ -10,18 +10,53 @@
   \centering
   \begin{subfigure}[b]{0.3\textwidth}
     \centering
-    \includegraphics[width=0.9\textwidth]{images/encrypt-and-mac.pdf}
+    \begin{tikzpicture}[remember picture]
+      \node (row1) [struct] {
+        \node (plaintext) [rect] {Plain text}; & \node [minimum width=1cm] {}; \\
+      };
+      \node (row2) [struct,below=of row1] {
+        \node (ciphertext) [rect] {Cipher text}; & \node (mac) [rect,minimum width=1cm] {MAC}; \\
+      };
+      \path [line] (plaintext) -- (ciphertext);
+      \path [line] (plaintext) -- (mac);
+    \end{tikzpicture}
     \caption{Encrypt-and-MAC}
   \end{subfigure}
   \begin{subfigure}[b]{0.3\textwidth}
     \centering
-    \includegraphics[width=0.9\textwidth]{images/mac-then-encrypt.pdf}
+    \begin{tikzpicture}
+      \node (row1) [struct] {
+        \node (plaintext) [rect] {Plain text}; & \node [minimum width=1cm] {}; \\
+      };
+      \node (row2) [struct,below=of row1] {
+        \node (plaintext2) [rect] {Plain text}; & \node (mac) [rect,minimum width=1cm] {MAC}; \\
+      };
+      \node (row3) [struct,below=of row2] {
+        \node (ciphertext) [rect,minimum width=3.5cm] {Cipher text}; \\
+      };
+      \path [line,color=Gray] (plaintext) -- (plaintext2);
+      \path [line] (plaintext) -- (mac);
+      \path [line] (row2) -- (ciphertext);
+    \end{tikzpicture}
     \caption{MAC-then-encrypt}
   \end{subfigure}
   \begin{subfigure}[b]{0.3\textwidth}
     \centering
-    \includegraphics[width=0.9\textwidth]{images/encrypt-then-mac.pdf}
+    \begin{tikzpicture}
+      \node (row1) [struct] {
+        \node (plaintext) [rect] {Plain text}; & \node [minimum width=1cm] {}; \\
+      };
+      \node (row2) [struct,below=of row1] {
+        \node (ciphertext) [rect] {Cipher text}; & \node [minimum width=1cm] {}; \\
+      };
+      \node (row3) [struct,below=of row2] {
+        \node (ciphertext2) [rect] {Cipher text}; & \node (mac) [rect,minimum width=1cm] {MAC}; \\
+      };
+      \path [line] (plaintext) -- (ciphertext);
+      \path [line,color=Gray] (ciphertext) -- (ciphertext2);
+      \path [line] (ciphertext) -- (mac);
+    \end{tikzpicture}
     \caption{Encrypt-then-MAC}
   \end{subfigure}
-  \caption{Generic compositions of Authentized Encryption}
+  \caption{Generic compositions of Authenticated Encryption}
 \end{figure}

@@ -1,0 +1,32 @@
+dec;hex;name;level;descr
+0;0x00;Close notify;warning/fatal
+10;0x0a;Unexpected message;fatal
+20;0x14;Bad record MAC;fatal;Possibly a bad SSL implementation, or payload has been tampered with e.g. FTP firewall rule on FTPS server.
+21;0x15;Decryption failed;fatal;TLS only, reserved
+22;0x16;Record overflow;fatal;TLS only
+30;0x1e;Decompression failure;fatal
+40;0x28;Handshake failure;fatal
+41;0x29;No certificate;warning/fatal;SSL 3.0 only, reserved
+42;0x2a;Bad certificate;warning/fatal
+43;0x2b;Unsupported certificate;warning/fatal;e.g. certificate has only Server authentication usage enabled and is presented as a client certificate
+44;0x2c;Certificate revoked;warning/fatal
+45;0x2d;Certificate expired;warning/fatal;Check server certificate expire also check no certificate in the chain presented has expired
+46;0x2e;Certificate unknown;warning/fatal
+47;0x2f;Illegal parameter;fatal
+48;0x30;Unknown CA;fatal;TLS only
+49;0x31;Access denied;fatal;TLS only – e.g. no client certificate has been presented (TLS: Blank certificate message or SSLv3: No Certificate alert), but server is configured to require one.
+50;0x32;Decode error;fatal;TLS only
+51;0x33;Decrypt error;warning/fatal;TLS only
+60;0x3c;Export restriction;fatal;TLS only, reserved
+70;0x46;Protocol version;fatal;TLS only
+71;0x47;Insufficient security;fatal;TLS only
+80;0x50;Internal error;fatal;TLS only
+90;0x5a;User canceled;fatal;TLS only
+100;0x64;No renegotiation;warning;TLS only
+110;0x6e;Unsupported extension;warning;TLS only
+111;0x6f;Certificate unobtainable;warning;TLS only
+112;0x70;Unrecognized name;warning/fatal;TLS only; client's Server Name Indicator specified a hostname not supported by the server
+113;0x71;Bad certificate status response;fatal;TLS only
+114;0x72;Bad certificate hash value;fatal;TLS only
+115;0x73;Unknown PSK identity;fatal;TLS only
+120;0x78;No Application Protocol;fatal;TLS only, client's ALPN did not contain any server-supported protocols
