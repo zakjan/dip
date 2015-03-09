@@ -1,34 +1,27 @@
 \section{History}
 
-As well as other important Internet standards, the TLS protocol is a joint work of experts from around the world, coordinated by IETF non-profit standards organization. IETF publishes its results in RFC documents. RFC production process differs from the standardization process of formal standards organizations such as ISO. \todo{WG...} Internet technology experts may submit an \textit{Internet Draft} without any support from an external institution. Usually the draft is produced by a working group of participating experts focused on specific area (such as TLS), and after approval from IETF may be published as \textit{Proposed Standard}.
+More specifically, TLS is a cryptographic protocol. It belongs to Presentation Layer (L6) in ISO/OSI model or to Application Layer in simplified IPS model.
 
-
-
-There are dozens of RFCs produced by TLS working group\footnote{\url{https://tools.ietf.org/wg/tls/}}, some of them specify the protocol itself, others add new features or new cryptographic algorithms.
-
-For the purpose of this thesis, relevant published RFCs about the TLS protocol are:
+TLS proto
 
 \begin{itemize}
   \item SSL 1.0 (not released)
   \item SSL 2.0 (1995)
-  \item SSL 3.0 (1996, RFC 6101, \textit{Historic Standard})
-  \item TLS 1.0 (1999, RFC 2246, \textit{Proposed Standard})
-  \item TLS 1.1 (2006, RFC 4346, \textit{Proposed Standard})
-  \item TLS 1.2 (2008, RFC 5246, \textit{Proposed Standard})
-  \item TLS 1.3 (work in progress, draft-ietf-tls-tls13, \textit{Internet Draft})
+  \item SSL 3.0 (1996)
+  \item TLS 1.0 (1999)
+  \item TLS 1.1 (2006)
+  \item TLS 1.2 (2008)
+  \item TLS 1.3 (work in progress)
 \end{itemize}
 
-\begin{description}
-  \item[RFC2246] The TLS Protocol Version 1.0
-  \item[RFC4346] The Transport Layer Security (TLS) Protocol Version 1.1
-  \item[RFC5246] The Transport Layer Security (TLS) Protocol Version 1.2
-\end{description}
+Its predecessor, Secure Sockets Layer (SSL),
 
-And RFCs adding support for new cryptographic combinations with AEAD ciphers:
+\todo{history}
+\todo{browser appearance (lock icon, green bar etc.)}
+\todo{state machine}
 
-\begin{description}
-  \item[RFC5288] AES Galois Counter Mode (GCM) Cipher Suites for TLS
-  \item[RFC6655] AES-CCM Cipher Suites for Transport Layer Security (TLS)
-\end{description}
-
-\todo{RFC graph, "updates" and "obsoletes" edges}
+\begin{itemize}
+  \item průběh vyjednávání šifrovací sady a asymetrické výměny klíčů
+  \item poslední objevené útoky na TLS
+  \item proč se doporučuje používat pouze šifrovací sady s AEAD (v současnosti pouze AES-GCM)
+\end{itemize}

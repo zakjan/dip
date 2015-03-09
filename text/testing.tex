@@ -10,7 +10,10 @@ openssl list-cipher-commands
 openssl list-cipher-algorithms
 
 openssl speed
-generate cert
-openssl s\_server -cert ...
-openssl s\_client -connect 127.0.0.1:4433
+openssl genrsa 2048 > selfsigned.key
+openssl req -new -x509 -key selfsigned.key -out selfsigned.crt -days 365
+openssl s\_server -accept 4433 -cert selfsigned.crt -key selfsigned.key -cipher 'CAESAR'
+openssl s\_client -connect 127.0.0.1:4433 -CAfile selfsigned.crt
 openssl s\_time
+
+Wireshark: "ssl \&\& ip.addr == 127.0.0.1" on Loopback interface
