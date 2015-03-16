@@ -1,0 +1,142 @@
+\chapter{Competition for Authenticated Encryption: Security, Applicability and Robustness}
+
+CAESAR is worldwide cryptographic competition, focused on finding new methods of authenticated encryption, that offer advantages against commonly used AES-GCM and will be suitable for widespread adoption. Submitted algorithms will be publicly evaluated by committee of researchers in fields of cryptography and cryptoanalysis.
+
+\todo{popis algoritmů byly v soutěži, v čem se lišily, jaké a jak v nich byly nalezeny zranitelnosti a proto nepostoupily}
+
+\todo{výběr algoritmu pro implementaci}
+
+\section{Submission requirements}
+
+An \textbf{authenticated cipher} is a function with five byte-string inputs and one byte-string output. The five inputs are:
+
+\begin{description}
+  \item[plaintext] variable-length
+  \item[associated data] variable-length
+  \item[secret message number] fixed-length
+  \item[public message number] fixed-length
+  \item[key] fixed-length
+\end{description}
+
+The first four inputs have different security purposes, as indicated by \autoref{table/caesar-inputs}.
+
+\input{tables/caesar-inputs.tex}
+
+
+The output is a variable-length ciphertext. The first four inputs have different security purposes, as indicated by the following table:
+
+\section{C API}
+
+\begin{lstlisting}
+#define CRYPTO_KEYBYTES 16
+#define CRYPTO_NSECBYTES 0
+#define CRYPTO_NPUBBYTES 12
+#define CRYPTO_ABYTES 16
+
+#include "crypto_aead.h"
+
+int crypto_aead_encrypt(
+unsigned char *c,unsigned long long *clen,
+const unsigned char *m,unsigned long long mlen,
+const unsigned char *ad,unsigned long long adlen,
+const unsigned char *nsec,
+const unsigned char *npub,
+const unsigned char *k
+)
+{
+...
+... the code for the cipher implementation goes here,
+... generating a ciphertext c[0],c[1],...,c[*clen-1]
+... from a plaintext m[0],m[1],...,m[mlen-1]
+... and associated data ad[0],ad[1],...,ad[adlen-1]
+... and secret message number nsec[0],nsec[1],...
+... and public message number npub[0],npub[1],...
+... and secret key k[0],k[1],...
+...
+return 0;
+}
+
+int crypto_aead_decrypt(
+unsigned char *m,unsigned long long *mlen,
+unsigned char *nsec,
+const unsigned char *c,unsigned long long clen,
+const unsigned char *ad,unsigned long long adlen,
+const unsigned char *npub,
+const unsigned char *k
+)
+{
+...
+... the code for the cipher implementation goes here,
+... generating a plaintext m[0],m[1],...,m[*mlen-1]
+... and secret message number nsec[0],nsec[1],...
+... from a ciphertext c[0],c[1],...,c[clen-1]
+... and associated data ad[0],ad[1],...,ad[adlen-1]
+... and public message number npub[0],npub[1],...
+... and secret key k[0],k[1],...
+...
+return 0;
+}
+\end{lstlisting}
+
+npub - IV
+nsec - nepoužito
+
+\section{Submissions}
+
+analyzovat každou podrobně je nad rámec této práce
+
+the OCB mode, the GCM mode, the duplex sponge or AES-based block-cipher/permutation, Keccak-based permutation, stream-cipher based permutation
+
+\section{Types}
+
+\subsection{Duplex sponge functions}
+
+Sponge as a design tool
+
+On top of its original goal as a security reference, we realized that the sponge construction could also be used to build efficient cryptographic primitives. An important aspect is that the cryptographic primitive to be designed is a fixed-length permutation rather than harder-to-build structures such as block ciphers or dedicated compression functions. This is rather good news in itself, as all the symmetric cryptographic services can be realized using only a single primitive: a fixed-length permutation. As opposed to a block cipher, a fixed-length permutation makes no distinction between data and key input and hence can treat all input bits on an equal footing and at the same time can be made simpler.
+
+\url{http://sponge.noekeon.org/}
+
+The first 128-bit message block is handled directly, and taking in account the tag generation one needs m + 1 internal cipher calls to process messages of m block of n bits each. This is particularly important in many lightweight applications where message sent are usually composed of a few dozens of bytes (this is common disadvantage of sponge-based or stream cipher based lightweight designs like FIDES [2]) or ALE [8]).
+
+Deoxys
+
+Guido Bertoni, Joan Daemen, Michael Peeters, and Gilles Van Assche. Duplexing the Sponge: Single-Pass
+Authenticated Encryption and Other Applications. In Ali Miri and Serge Vaudenay, editors, Selected Areas
+in Cryptography, volume 7118 of LNCS, pages 320–337. Springer, 2011.
+
+\subsection{Block modes}
+
+It turns out that it is quite difficult to construct a secure lightweight authenticated cipher. Hence, it is meaningful to develop a secure lightweight authenticatedvencryption mode so that the previous designs of lightweight block ciphers can be converted to lightweight authenticated ciphers.
+
+\section{Primitives}
+
+AES
+
+ARX - addition, rotation, XOR
+
+LRX - logic, rotation, XOR
+
+quaternions
+
+\section{Selection criteria}
+
+\subsection{Small messages}
+
+It performs very well for small messages (only m + 1 calls to Joltik-BC are required for a m
+block message and without any precomputation), in contrary to sponge or stream cipher based
+lightweight designs that require a strong initialization stage. Such a feature is very important
+as many constrained environments will only cipher very short messages (for example a 96-bit
+Electronic Product Code)
+
+Joltik
+
+\begin{description}
+  \item[Online (one-pass)]
+\end{description}
+
+
+
+
+\input{text/caesar-norx.tex}
+\input{text/caesar-selection.tex}

@@ -1,0 +1,5 @@
+,integrity,confidentiality,single-use
+plaintext,yes,yes,no
+associated data,yes,no,no
+secret message number,yes,yes,yes
+public message number,yes,no,yes

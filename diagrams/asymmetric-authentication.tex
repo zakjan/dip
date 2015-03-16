@@ -1,0 +1,12 @@
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \node (alice) [rect,left=2.5] {Alice};
+    \node [align=center,below=0 of alice] {$S, PR_{Alice}$ \\ $m, a := S(PR_{Alice}, m)$};
+    \node (bob) [rect,right=2.5] {Bob};
+    \node [align=center,below=0 of bob] {$V, PU_{Alice}$ \\ $m, a, V(PU_{Alice}, m, a)?$};
+    \path [line] (alice) -- (bob) node[near start,below]{$m, a$};
+  \end{tikzpicture}
+  \caption{Generic setting for asymmetric authentication}
+  \label{figure/asymmetric-authentication}
+\end{figure}

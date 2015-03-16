@@ -1,0 +1,15 @@
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \node (alice) [rect,left=2.5] {Alice};
+    \node [below=0 of alice] {$m$};
+    \node (bob) [rect,right=2.5] {Bob};
+    \node [below=0 of bob] {$m$};
+    \node (eve) [rect,below=1] {Eve};
+    \node [below=0 of eve,label=right:{\noMark}] {$m$};
+    \path [line,color=Gray] (0,0) -- (eve);
+    \path [line] (alice) -- (bob) node[near start,below]{$m$};
+  \end{tikzpicture}
+  \caption{How can Alice and Bob communicate securely?}
+  \label{figure/encryption-problem}
+\end{figure}

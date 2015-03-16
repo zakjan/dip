@@ -1,0 +1,12 @@
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \node (alice) [rect,left=2.5] {Alice};
+    \node [align=center,below=0 of alice] {$S, K_a$ \\ $m, a := S(K_a, m)$};
+    \node (bob) [rect,right=2.5] {Bob};
+    \node [align=center,below=0 of bob] {$V, K_a$ \\ $m, a, V(K_a, m, a)?$};
+    \path [line] (alice) -- (bob) node[near start,below]{$m, a$};
+  \end{tikzpicture}
+  \caption{Generic setting for authentication}
+  \label{figure/authentication}
+\end{figure}

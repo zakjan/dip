@@ -16,4 +16,4 @@ openssl s\_server -accept 4433 -cert selfsigned.crt -key selfsigned.key -cipher 
 openssl s\_client -connect 127.0.0.1:4433 -CAfile selfsigned.crt
 openssl s\_time
 
-Wireshark: "ssl \&\& ip.addr == 127.0.0.1" on Loopback interface
+Wireshark "ip.port == 4444" on Loopback interface

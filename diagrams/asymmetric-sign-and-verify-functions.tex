@@ -1,0 +1,32 @@
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \node (f) [rect,minimum size=1.5*\nodeheight] {$S$};
+      \coordinate (k) at ($(f)+(0,1)$);
+      \coordinate (m) at ($(f)-(1,0)$);
+      \coordinate (a) at ($(f)+(1,0)$);
+      \path [line,->] (k) -- (f) node[at start,above]{$PR_a$};
+      \path [line,->] (m) -- (f) node[at start,left]{$m$};
+      \path [line,->] (f) -- (a) node[at end,right]{$a$};
+    \end{tikzpicture}
+    \caption{Sign function}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \node (f) [rect,minimum size=1.5*\nodeheight] {$V$};
+      \coordinate (k) at ($(f)+(0,1)$);
+      \coordinate (m) at ($(f)-(1,0)$);
+      \coordinate (a) at ($(f)-(1,0)$);
+      \coordinate (r) at ($(f)+(1,0)$);
+      \path [line,->] (k) -- (f) node[at start,above]{$PU_a$};
+      \path [line,->,transform canvas={yshift=0.5*\nodeheight}] (m) -- (f) node[at start,left]{$m$};
+      \path [line,->,transform canvas={yshift=-0.5*\nodeheight}] (a) -- (f) node[at start,left]{$a$};
+      \path [line,->] (f) -- (r) node[at end,right]{$\{0,1\}$};
+    \end{tikzpicture}
+    \caption{Verify function}
+  \end{subfigure}
+  \caption{Asymmetric sign and verify functions}
+\end{figure}

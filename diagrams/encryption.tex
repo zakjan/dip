@@ -1,0 +1,12 @@
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \node (alice) [rect,left=2.5] {Alice};
+    \node [align=center,below=0 of alice] {$E, K_e$ \\ $m, c := E(K_e, m)$};
+    \node (bob) [rect,right=2.5] {Bob};
+    \node [align=center,below=0 of bob] {$D, K_e$ \\ $c, m := D(K_e, c)$};
+    \path [line] (alice) -- (bob) node[near start,below]{$c$};
+  \end{tikzpicture}
+  \caption{Generic setting for encryption}
+  \label{figure/encryption}
+\end{figure}

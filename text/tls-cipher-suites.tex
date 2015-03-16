@@ -19,21 +19,7 @@ A cipher suite is defined roughly by the following attributes:
 
 Cipher suite names are usually long, descriptive and consistent. They are made from names of the key exchange method, authentiction method, encryption method and optional MAC or PRF algorithm.
 
-\begin{sidewaystable}
-  \hspace{-0.5cm} % hack (wide table)
-  \csvreader[
-    after head=\begin{tabular}{lllllll}\toprule\csvlinetotablerow\\\midrule,
-    late after line=\\,
-    late after last line=\\\bottomrule\end{tabular}
-  ]
-    {tables/tls-cipher-suites.csv}{}
-    {\texttt{\csvcoli} & \texttt{\csvcolii} & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi & \csvcolvii}
-
-  \todo{Better examples}
-  \caption{Example cipher suites and their security properties}
-\end{sidewaystable}
-
-
+\input{tables/tls-cipher-suites.tex}
 
 \subsection{Key exchange}
 

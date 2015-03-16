@@ -1,10 +1,10 @@
-\subsection{NORX}
+\section{NORX}
 
 NO(T A)RX
 
 ARX - Addition, Rotation, XOR
 
-\subsubsection{Design goals}
+\subsection{Design goals}
 
 \begin{itemize}
   \item \textbf{High security}
@@ -16,7 +16,7 @@ ARX - Addition, Rotation, XOR
   \item Side-channel leaks robustness (esp. timings)
 \end{itemize}
 
-\subsubsection{Parameters}
+\subsection{Parameters}
 
 \begin{description}
   \item[Word Bit Size] $W \in {32, 64}$
@@ -25,18 +25,7 @@ ARX - Addition, Rotation, XOR
   \item[Tag Bit Size] $|A| \leq 10W$
 \end{description}
 
-\begin{table}
-  \centering
-  \csvreader[
-    after head=\begin{tabular}{llll}\toprule\csvlinetotablerow\\\midrule,
-    late after line=\\,
-    late after last line=\\\bottomrule\end{tabular}
-  ]
-    {tables/norx-proposed-instances.csv}{}
-    {\texttt{\csvcoli} & \csvcolii & \csvcoliii & \csvcoliv}
-
-  \caption{NORX proposed instances}
-\end{table}
+\input{tables/norx-proposed-instances.tex}
 
 R=6: higher security margin
 

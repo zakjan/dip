@@ -1,0 +1,55 @@
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.3\textwidth}
+    \centering
+    \begin{tikzpicture}[remember picture]
+      \node (row1) [struct] {
+        \node (plaintext) [rect] {Plaintext}; & \node [minimum width=1cm] {}; \\
+      };
+      \node (row2) [struct,below=of row1] {
+        \node (ciphertext) [rect] {Ciphertext}; & \node (mac) [rect,minimum width=1cm] {MAC}; \\
+      };
+      \path [line] (plaintext) -- (ciphertext);
+      \path [line] (plaintext) -- (mac);
+    \end{tikzpicture}
+    \caption{Encrypt-and-MAC}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \node (row1) [struct] {
+        \node (plaintext) [rect] {Plaintext}; & \node [minimum width=1cm] {}; \\
+      };
+      \node (row2) [struct,below=of row1] {
+        \node (ciphertext) [rect] {Ciphertext}; & \node [minimum width=1cm] {}; \\
+      };
+      \node (row3) [struct,below=of row2] {
+        \node (ciphertext2) [rect] {Ciphertext}; & \node (mac) [rect,minimum width=1cm] {MAC}; \\
+      };
+      \path [line] (plaintext) -- (ciphertext);
+      \path [line,color=Gray] (ciphertext) -- (ciphertext2);
+      \path [line] (ciphertext) -- (mac);
+    \end{tikzpicture}
+    \caption{Encrypt-then-MAC}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \node (row1) [struct] {
+        \node (plaintext) [rect] {Plaintext}; & \node [minimum width=1cm] {}; \\
+      };
+      \node (row2) [struct,below=of row1] {
+        \node (plaintext2) [rect] {Plaintext}; & \node (mac) [rect,minimum width=1cm] {MAC}; \\
+      };
+      \node (row3) [struct,below=of row2] {
+        \node (ciphertext) [rect,minimum width=3.5cm] {Ciphertext}; \\
+      };
+      \path [line,color=Gray] (plaintext) -- (plaintext2);
+      \path [line] (plaintext) -- (mac);
+      \path [line] (row2) -- (ciphertext);
+    \end{tikzpicture}
+    \caption{MAC-then-encrypt}
+  \end{subfigure}
+  \caption{Generic compositions of authenticated encryption}
+  \label{figure/generic-compositions-of-authenticated-encryption}
+\end{figure}

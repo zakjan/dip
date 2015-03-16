@@ -1,0 +1,17 @@
+\newcommand{\boldYes}[1]{%
+  \ifthenelse{\equal{#1}{yes}}{\textbf{#1}}{#1}%
+}
+
+\begin{table}
+  \centering
+  \csvreader[
+    after head=\begin{tabular}{llll}\toprule\csvlinetotablerow\\\midrule,
+    late after line=\\,
+    late after last line=\\\bottomrule\end{tabular}
+  ]
+    {tables/caesar-inputs.csv}{}
+    {\csvcoli & \boldYes{\csvcolii} & \boldYes{\csvcoliii} & \boldYes{\csvcoliv}}
+
+  \caption{CAESAR inputs}
+  \label{table/caesar-inputs}
+\end{table}

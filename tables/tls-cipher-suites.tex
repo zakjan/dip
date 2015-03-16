@@ -1,0 +1,13 @@
+\begin{sidewaystable}
+  \hspace{-0.5cm} % hack (wide table)
+  \csvreader[
+    after head=\begin{tabular}{lllllll}\toprule\csvlinetotablerow\\\midrule,
+    late after line=\\,
+    late after last line=\\\bottomrule\end{tabular}
+  ]
+    {tables/tls-cipher-suites.csv}{}
+    {\texttt{\csvcoli} & \texttt{\csvcolii} & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi & \csvcolvii}
+
+  \todo{Better examples}
+  \caption{Example cipher suites and their security properties}
+\end{sidewaystable}

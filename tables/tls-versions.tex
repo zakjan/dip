@@ -1,0 +1,5 @@
+\begin{table}
+  \centering
+  \csvreader[tabular=cccl,myTable={Major & Minor & Hex & Name}]{tables/tls-versions.csv}{}{\major & \minor & \texttt{\hex} & \name}
+  \caption{TLS versions}
+\end{table}

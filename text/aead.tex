@@ -1,40 +1,47 @@
 \chapter{Authenticated Encryption}
 
-\todo{popis AEAD}
+In previour chapter, we have covered various basic cryptography patterns which help Alice and Bob to communicate securely.
 
-\section{Block cipher modes}
+Many applications desires to achieve both confidentiality and integrity goals by using some combination of encryption and authentication algorithm, with each algorithm using an independent key. However, securely combining them together is difficult, because it could lead to incorrect, error-prone combination.
 
-from 70s
+There are a few researched combinations of encryption and authentication, called Generic compositions: Encrypt-and-MAC (E\&M), Encrypt-then-MAC (EtM), MAC-then-Encrypt (MtE). These combinations are successfully used in real-world software.
+
+More recently, the idea of providing both confidentiality and integrity goals using a single cryptosystem has become accepted. In this concept, the combination of encryption and authentication algorithm is replaced by a Authenticated Encryption (AE) or Authenticated Encryption with Associated Data (AEAD) algorithm.
+
+Authenticated Encryption (AE) is a form of encryption that, in addition to providing confidentiality for the plaintext that is encrypted, provides a way to check its integrity and authenticity. Decryption is combined in single step with integrity validation. These attributes are provided under a single, easy to use interface.
+
+Application designers can benefit from using AE by allowing them to focus on real project needs, instead of designing their own cryptosystem. More importantly, the security of an AE algorithm can be analyzed independent from its use in a particular application. This property frees the user of the AE of the need to consider security aspects such as the relative order of encryption and authentication and the security of the particular combination of cipher and MAC.
 
 \begin{description}
-  \item[ECB]
-  \item[CBC]
-  \item[CFB]
-  \item[OFB]
-  \item[CTR]
+  \item[Confidentiality] ensures that data is available only to those authorized to obtain it. Usually it is realized using encryption.
+  \item[Integrity] ensures that data has not been undetectably altered or forged, and that the data has been sent only by authorized entities. Usually it is realized using authentication.
 \end{description}
 
-\todo{Block cipher modes image from @angealbertini}
 
-Exploiting malleability:
+\section{Generic compositions}
 
-ECB: Rearrange, replay blocks
-CTR, OFB: Bitwise modification of blocks
-CBC: Change current ciphertext block to predictably change the next plaintext block (during decryption)
+The simpliest approach to design authenticated encryption schema is to combine a standard symmetric encryption algorithm with a MAC in some way. There are a few possible ways how to do it:
 
-Chosen-boundary attacks:
+\begin{description}
+  \item[Encrypt-and-MAC] The plaintext is encrypted to ciphertext, then a MAC is computed from plaintext as well. The ciphertext (containing encrypted plaintext) and plaintext's MAC are sent together.
+  \item[Encrypt-then-MAC] The plaintext is encrypted to ciphertext, then a MAC is computed from ciphertext. The ciphertext (containing encrypted plaintext) and ciphertext's MAC are sent tegether.
+  \item[MAC-then-Encrypt] A MAC is computed from the plaintext, then the plaintext and MAC are encrypted together to ciphertext. The ciphertext (containing encrypted plaintext and plaintext's MAC) is sent.
+\end{description}
 
-ECB, CBC, CFB: Partial chosen-plaintext control
-Decrypt messages byte by byte
+See \autoref{figure/generic-compositions-of-authenticated-encryption} for clear comparison of them.
 
-Here come the XOR ninjas
+All of them are used in real-world software - Encrypt-and-MAC in SSH, Encrypt-then-MAC in IPSec and MAC-then-Encrypt in TLS.
 
-\section{Authenticated Encryption}
+However, recent research shows that only Encrypt-then-MAC schema is provably secure. \cite{generic-ae} \cite{generic-ae2}
+
+TLS reacts to these results and introduced optional Encrypt-then-MAC support, which can be negotiated by a specific a TLS extension as defined in RFC 7366\footnote{\url{https://tools.ietf.org/html/rfc7366}}.
+
+\input{diagrams/generic-compositions-of-authenticated-encryption.tex}
+
 \section{Authenticated Encryption with Associated Data}
 
-Associated Data can be for example TCP headers
+Authenticated Encryption with Associated Data (AEAD) adds the ability to check the integrity and authenticity of some Associated Data (AD), also called Additional Authenticated Data (AAD), that is not encrypted.
 
+Many cryptographic applications require both confidentiality and message authentication.
 
-
-\input{text/aead-generic.tex}
-\input{text/aead-caesar.tex}
+Associated data can be for example TCP headers

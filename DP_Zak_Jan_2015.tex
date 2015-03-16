@@ -13,6 +13,7 @@
 \usepackage{dirtree}
 \usepackage{pifont}
 \usepackage{tikz}
+\usepackage{listings}
 
 
 \newcommand{\myblindtext}{\textcolor{Gray}{\blindtext}}
@@ -37,7 +38,7 @@
   >=stealth,
   font=\footnotesize,
   node distance=\nodeheight,
-  rect/.style={draw,fill=myOrange,shape=rectangle,minimum width=\nodewidth,minimum height=\nodeheight,inner sep=1mm,text height=.8em,text depth=.2em},
+  rect/.style={draw,fill=myOrange,shape=rectangle,minimum width=\nodewidth,minimum height=\nodeheight,inner sep=1mm,text height=1.5ex,text depth=0.25ex},
   circle/.style={draw,fill=myOrange,shape=circle,minimum size=\nodeheight,inner sep=0},
   line/.style={draw,->,very thick,rounded corners},
   struct/.style={matrix,inner sep=0,column sep=-\pgflinewidth},
@@ -66,6 +67,8 @@
 
 \input{text/intro.tex}
 \input{text/crypto.tex}
+\input{text/aead.tex}
+\input{text/caesar.tex}
 \input{text/tls.tex}
 \input{text/realisation.tex}
 \input{text/testing.tex}

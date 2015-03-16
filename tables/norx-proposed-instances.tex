@@ -1,0 +1,12 @@
+\begin{table}
+  \centering
+  \csvreader[
+    after head=\begin{tabular}{llll}\toprule\csvlinetotablerow\\\midrule,
+    late after line=\\,
+    late after last line=\\\bottomrule\end{tabular}
+  ]
+    {tables/norx-proposed-instances.csv}{}
+    {\texttt{\csvcoli} & \csvcolii & \csvcoliii & \csvcoliv}
+
+  \caption{NORX proposed instances}
+\end{table}

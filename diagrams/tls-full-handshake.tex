@@ -1,0 +1,53 @@
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \node (table) [matrix,row sep=0.5*\nodeheight,column sep=2.5*\nodewidth] {
+      \node (client) [rect] {Client}; & \node (server) [rect] {Server}; \\[0.5*\nodeheight]
+      \node (client1) [circle] {1}; & \coordinate (server1); \\
+      \coordinate (client2); & \node (server2) [circle] {2}; \\
+      \coordinate (client3); & \node (server3) [circle] {3}; \\
+      \coordinate (client4); & \node (server4) [circle] {4}; \\
+      \coordinate (client5); & \node (server5) [circle] {5}; \\
+      \coordinate (client6); & \node (server6) [circle] {6}; \\
+      \node (client7) [circle] {7}; & \coordinate (server7); \\
+      \node (client8) [circle] {8}; & \coordinate (server8); \\
+      \node (client9) [circle] {9}; & \coordinate (server9); \\
+      \node (client10) [circle] {10}; & \coordinate (server10); \\
+      \node (client11) [circle] {11}; & \coordinate (server11); \\
+      \coordinate (client12); & \node (server12) [circle] {12}; \\
+      \coordinate (client13); & \node (server13) [circle] {13}; \\[0.5*\nodeheight]
+      \coordinate (client13b); & \coordinate (server13b); \\[0.5*\nodeheight]
+      \node (client14) [circle] {14}; & \node (server14) [circle] {14}; \\
+      \coordinate (client15); & \coordinate (server15); \\
+    };
+
+    \begin{pgfonlayer}{bg}
+      \path [draw,dashed] (client) -- (client15);
+      \path [draw,dashed] (server) -- (server15);
+    \end{pgfonlayer}
+    \path [line] (client1) -- (server1) node[above,near start] {\textit{ClientHello}};
+    \path [line] (server2) -- (client2) node[above,near start] {\textit{ServerHello}};
+    \path [line] (server3) -- (client3) node[above,near start] {\textit{Certificate}${}^\ast$};
+    \path [line] (server4) -- (client4) node[above,near start] {\textit{ServerKeyExchange}${}^\ast$};
+    \path [line] (server5) -- (client5) node[above,near start] {\textit{CertificateRequest}${}^\ast$};
+    \path [line] (server6) -- (client6) node[above,near start] {\textit{ServerHelloDone}};
+    \path [line] (client7) -- (server7) node[above,near start] {\textit{Certificate}${}^\ast$};
+    \path [line] (client8) -- (server8) node[above,near start] {\textit{ClientKeyExchange}};
+    \path [line] (client9) -- (server9) node[above,near start] {\textit{CertificateVerify}${}^\ast$};
+    \path [line] (client10) -- (server10) node[above,near start] {[\textit{ChangeCipherSpec}]};
+    \path [line] (client11) -- (server11) node[above,near start] {\textit{Finished}};
+    \path [line] (server12) -- (client12) node[above,near start] {[\textit{ChangeCipherSpec}]};
+    \path [line] (server13) -- (client13) node[above,near start] {\textit{Finished}};
+    \path [draw] ($(client13b)-(0.5*\nodewidth,0)$) -- ($(server13b)+(0.5*\nodewidth,0)$) node[above,midway] {handshake completed};
+    \path [line,<->] (client14) -- (server14) node[above,midway] {application data};
+
+    \node [below=0 of table,xshift=-5mm] {
+      \begin{tabular}{cl}
+        ${}^\ast$ & optional message \\
+        $[$ $]$ & ChangeCipherSpec protocol message \\
+      \end{tabular}
+    };
+  \end{tikzpicture}
+  \caption{TLS full handshake}
+  \label{figures/tls-full-handshake}
+\end{figure}

@@ -1,0 +1,38 @@
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \node (table) [matrix,row sep=0.5*\nodeheight,column sep=2.5*\nodewidth] {
+      \node (client) [rect] {Client}; & \node (server) [rect] {Server}; \\[0.5*\nodeheight]
+      \node (client1) [circle] {1}; & \coordinate (server1); \\
+      \coordinate (client2); & \node (server2) [circle] {2}; \\
+      \coordinate (client3); & \node (server3) [circle] {3}; \\
+      \coordinate (client4); & \node (server4) [circle] {4}; \\
+      \node (client5) [circle] {5}; & \coordinate (server5); \\
+      \node (client6) [circle] {6}; & \coordinate (server6); \\[0.5*\nodeheight]
+      \coordinate (client6b); & \coordinate (server6b); \\[0.5*\nodeheight]
+      \node (client7) [circle] {7}; & \node (server7) [circle] {7}; \\
+      \coordinate (client8); & \coordinate (server8); \\
+    };
+
+    \begin{pgfonlayer}{bg}
+      \path [draw,dashed] (client) -- (client8);
+      \path [draw,dashed] (server) -- (server8);
+    \end{pgfonlayer}
+    \path [line] (client1) -- (server1) node[above,near start] {\textit{ClientHello}};
+    \path [line] (server2) -- (client2) node[above,near start] {\textit{ServerHello}};
+    \path [line] (server3) -- (client3) node[above,near start] {[\textit{ChangeCipherSpec}]};
+    \path [line] (server4) -- (client4) node[above,near start] {\textit{Finished}};
+    \path [line] (client5) -- (server5) node[above,near start] {[\textit{ChangeCipherSpec}]};
+    \path [line] (client6) -- (server6) node[above,near start] {\textit{Finished}};
+    \path [draw] ($(client6b)-(0.5*\nodewidth,0)$) -- ($(server6b)+(0.5*\nodewidth,0)$) node[above,midway] {handshake completed};
+    \path [line,<->] (client7) -- (server7) node[above,midway] {application data};
+
+    \node [below=0 of table,xshift=-5mm] {
+      \begin{tabular}{cl}
+        $[$ $]$ & ChangeCipherSpec protocol message \\
+      \end{tabular}
+    };
+  \end{tikzpicture}
+  \caption{TLS abbreviated handshake}
+  \label{figures/tls-abbreviated-handshake}
+\end{figure}
