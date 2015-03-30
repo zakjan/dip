@@ -2,9 +2,9 @@
   \centering
   \begin{tikzpicture}
     \node (alice) [rect,left=2.5] {Alice};
-    \node [align=center,below=0 of alice] {$E, PU_{Bob}$ \\ $m, c := E(PU_{Bob}, m)$};
+    \node [align=center,below=0 of alice] {$E, PK_{Bob}$ \\ $m, c := E(PK_{Bob}, m)$};
     \node (bob) [rect,right=2.5] {Bob};
-    \node [align=center,below=0 of bob] {$D, PR_{Bob}$ \\ $c, m := D(PR_{Bob}, c)$};
+    \node [align=center,below=0 of bob] {$D, SK_{Bob}$ \\ $c, m := D(SK_{Bob}, c)$};
     \path [line] (alice) -- (bob) node[near start,below]{$c$};
   \end{tikzpicture}
   \caption{Generic setting for asymmetric encryption}

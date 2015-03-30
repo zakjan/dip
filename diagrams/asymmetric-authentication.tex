@@ -2,9 +2,9 @@
   \centering
   \begin{tikzpicture}
     \node (alice) [rect,left=2.5] {Alice};
-    \node [align=center,below=0 of alice] {$S, PR_{Alice}$ \\ $m, a := S(PR_{Alice}, m)$};
+    \node [align=center,below=0 of alice] {$S, SK_{Alice}$ \\ $m, a := S(SK_{Alice}, m)$};
     \node (bob) [rect,right=2.5] {Bob};
-    \node [align=center,below=0 of bob] {$V, PU_{Alice}$ \\ $m, a, V(PU_{Alice}, m, a)?$};
+    \node [align=center,below=0 of bob] {$V, PK_{Alice}$ \\ $m, a, V(PK_{Alice}, m, a)?$};
     \path [line] (alice) -- (bob) node[near start,below]{$m, a$};
   \end{tikzpicture}
   \caption{Generic setting for asymmetric authentication}

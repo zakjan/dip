@@ -5,12 +5,12 @@
 \begin{table}
   \centering
   \csvreader[
-    after head=\begin{tabular}{llll}\toprule\csvlinetotablerow\\\midrule,
+    after head=\begin{tabular}{lllll}\toprule\csvlinetotablerow\\\midrule,
     late after line=\\,
     late after last line=\\\bottomrule\end{tabular}
   ]
     {tables/caesar-inputs.csv}{}
-    {\csvcoli & \boldYes{\csvcolii} & \boldYes{\csvcoliii} & \boldYes{\csvcoliv}}
+    {\csvcoli & \boldYes{\csvcolii} & \boldYes{\csvcoliii} & \boldYes{\csvcoliv} & \boldYes{\csvcolv}}
 
   \caption{CAESAR inputs}
   \label{table/caesar-inputs}

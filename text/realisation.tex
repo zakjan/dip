@@ -2,6 +2,10 @@
 
 \todo{popis částí v knihovně, které budu upravovat}
 
+Because all CAESAR candidates are publishing its encrypt/decrypt primitives through the same CAESAR C API (see \autoref{toc/caesar-c-api}), I decided to implement a generic TLS cipher suite into OpenSSL in such way, that any CAESAR candidate can be used in the cipher suite.
+
+EVP is an OpenSSL API that provides a high-level interface to cryptographic functions. While OpenSSL also has direct interfaces for cryptographic operations, the EVP interface separates the operations from the actual backend used. That way, the actual implementation that is used can be changed, and one can specify an engine to use for the operations.
+
 All cipher suites whose first byte is 0xFF are considered private and can be used for defining local/experimental algorithms. \cite[p.~55]{rfc2246}
 
 

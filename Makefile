@@ -1,13 +1,14 @@
 BASENAME = DP_Zak_Jan_2015
+PDFLATEX = pdflatex -shell-escape
 
 default:
-	pdflatex $(BASENAME).tex
+	$(PDFLATEX) $(BASENAME).tex
 
 full:
-	pdflatex $(BASENAME).tex
+	$(PDFLATEX) $(BASENAME).tex
 	bibtex $(BASENAME)
-	pdflatex $(BASENAME).tex
-	pdflatex $(BASENAME).tex
+	$(PDFLATEX) $(BASENAME).tex
+	$(PDFLATEX) $(BASENAME).tex
 
 clean:
 	rm \

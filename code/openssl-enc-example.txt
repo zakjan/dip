@@ -1,0 +1,16 @@
+ENC="openssl enc -aes-128-cbc"
+PLAINTEXT="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+KEY=123456789abcdef03456789abcdef012
+IV=00000000000000000000000000000000
+
+CIPHERTEXT=$(echo -n "$PLAINTEXT" | $ENC -K $KEY -iv $IV | xxd -p)
+echo "$CIPHERTEXT"
+
+ef45d7ca2e7a1cb2b61e412767974b23af5b6532fc92373b9433029c8a30
+7fbe7737aac0fe4435ac5a3919884195469038e7345c61cb3cc205e570d8
+a10a1f9d
+
+PLAINTEXT2=$(echo -n "$CIPHERTEXT" | xxd -r -p | $ENC -d -K $KEY -iv $IV)
+echo "$PLAINTEXT2"
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.

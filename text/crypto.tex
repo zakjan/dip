@@ -1,8 +1,9 @@
 \chapter{Modern cryptography}
 
 \section{Kerckhoffs' principle}
+\label{toc/kerckhoffs-principle}
 
-All crypto algorithms are preferred to be public. A well-known Kerckhoffs' principle roughly says, that the security of the cryptosystem must depend only on the secrecy of the key, and not on the secrecy of the algorithm. They are very good reasons for this rule. Algorithms are hard to change. They are built into software or hardware, which can be difficult to upgrade. In real world, the same algorithm is used for a very long time. It is hard enough to keep the key secret, keeping the algorithm secret is far more difficult and expensive.
+All crypto algorithms are preferred to be public. A well-known \textit{Kerckhoffs' principle} roughly says, that the security of the cryptosystem must depend only on the secrecy of the key, and not on the secrecy of the algorithm. They are very good reasons for this rule. Algorithms are hard to change. They are built into software or hardware, which can be difficult to upgrade. In real world, the same algorithm is used for a very long time. It is hard enough to keep the key secret, keeping the algorithm secret is far more difficult and expensive.
 
 From past we know that it is very easy to make a small mistake and create cryptographic algorithm that is weak. If the algorithm is secret, nobody will find this fault until the attacker tries to break it. If the algorithm is kept secret, you shouldn't trust it. If the algorithm is public, researchers worldwide can participate in analyzing and improving the algorithm and its implementation.
 
@@ -15,9 +16,9 @@ Encryption is the original goal of cryptography. It is the process of encoding m
 
 The generic use case is: Alice and Bob\footnote{Alice, Bob and Eve are placeholder names commonly used when discussing cryptography, to identify an archetypal role of participant. Alice is a sender, Bob is a receiver and Eve is an eavesdropper. For the first time these names were used in Ron Rivest's paper introducing RSA public key cryptosystem. \cite{rsa} Since then, a number of other names have entered cryptographic literature, such as Malory for malicious active attacker.} want to communicate with each other. However, communication channels are assumed not to be secure. Eve is eavesdropping on the channel. Any message that Alice sends to Bob is also received by Eve. (The same applies for messages sent from Bob to Alice, but it is the same problem and the same solution will work for Bob's messages, so we concentrate to Alice messages.) How can Alice and Bob communicate without learning everything? (\autoref{figure/encryption-problem}) \cite[p.~23]{ferguson2010cryptography}
 
-To prevent Eve from understanding the conversation, Alice and Bob want to use encryption. They first need to agree on a set of encrypt and decrypt function $E, D$ as in \autoref{figure/encrypt-and-decrypt-functions} (a cipher) and a secret encryption key $K_e$. Then they can use encryption in their communication channel in \autoref{figure/encryption}.
+To prevent Eve from understanding the conversation, Alice and Bob want to use encryption. They first need to agree on a set of \textit{encrypt} and \textit{decrypt} function $E, D$ as in \autoref{figure/encrypt-and-decrypt-functions} (a cipher) and a secret encryption \textit{key} $K_e$. Then they can use encryption in their communication channel in \autoref{figure/encryption}.
 
-So Alice wants to send a plaintext message $m$. She first encrypts it using the encrypt function $E(K_e, m)$ to get a ciphertext message $c$. It can be sent over the communication channel, because only Alice and Bob know how to decrypt it. When Bob receives the ciphertext, he can decrypt it using the decrypt function $D(K_e, c)$ to get the original plaintext $m$ that Alice wanted to send to him.
+So Alice wants to send a \textit{plaintext} message $m$. She first encrypts it using the encrypt function $E(K_e, m)$ to get a \textit{ciphertext} message $c$. It can be sent over the communication channel, because only Alice and Bob know how to decrypt it. When Bob receives the ciphertext, he can decrypt it using the decrypt function $D(K_e, c)$ to get the original plaintext $m$ that Alice wanted to send to him.
 
 Now Eve tries to listen to the message, but she receives only ciphertext message $c$. If we assume she doesn't know the encryption key $K_e$, she can't decrypt it.
 
@@ -32,7 +33,7 @@ Example algorithms: RC4, DES, AES
 
 Alice and Bob have another problem, as shown in \autoref{figure/authentication-problem}. If Eve has a bit more control over the communication channel, she can not only passively listen to messages, she can also actively interfere.
 
-To prevent Eve from undetectably modifying or forging messages, Alice and Bob want to use authentication. They first need to agree on a set of sign and verify functions $S, V$ as in \autoref{figure/sign-and-verify-functions} (usually the verify function simply uses the sign function and compares its results) and a authentication key $K_a$ (different from encryption key $K_e$). Then they can use authentication their communication channel in \autoref{figure/authentication}.
+To prevent Eve from undetectably modifying or forging messages, Alice and Bob want to use authentication. They first need to agree on a set of \textit{sign} and \textit{verify} functions $S, V$ as in \autoref{figure/sign-and-verify-functions} (usually the verify function simply uses the sign function and compares its results) and a authentication key $K_a$ (different from encryption key $K_e$). Then they can use authentication their communication channel in \autoref{figure/authentication}.
 
 So Alice wants to send a message $m$. She first computes a signature $a$ using the sign function $S(K_a, m)$. This signature is also called Message Authentication Code (MAC). The message along with its signature can be sent over the communication channel, because only Alice and Bob know how to generate the signature. When Bob receives the message, he verifies the signature using the verify function $V(K_a, m, a)$, if it passes, he can be sure that Alice sent the message.
 

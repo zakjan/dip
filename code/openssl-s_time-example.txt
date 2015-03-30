@@ -1,0 +1,32 @@
+openssl s_time -connect 127.0.0.1:4444 -cipher DHE-RSA-AES128-GCM-SHA256 -time 3 -new
+
+Collecting connection statistics for 3 seconds
+...
+857 connections in 1.47s; 582.99 connections/user sec, bytes read 0
+857 connections in 4 real seconds, 0 bytes read per connection
+
+
+openssl s_time -connect 127.0.0.1:4444 -cipher DHE-RSA-AES128-GCM-SHA256 -time 3 -reuse
+
+Collecting connection statistics for 3 seconds
+...
+11834 connections in 1.11s; 10661.26 connections/user sec, bytes read 0
+11834 connections in 4 real seconds, 0 bytes read per connection
+
+
+openssl s_time -connect 127.0.0.1:4444 -cipher DHE-RSA-AES128-GCM-SHA256 -time 3 -reuse -www /test-8k.dat
+
+Now timing with session id reuse.
+starting
+...
+96 connections in 0.03s; 3200.00 connections/user sec, bytes read 790752
+96 connections in 4 real seconds, 8237 bytes read per connection
+
+
+openssl s_time -connect 127.0.0.1:4444 -cipher DHE-RSA-AES128-GCM-SHA256 -time 3 -reuse -www /test-1M.dat
+
+Now timing with session id reuse.
+starting
+...
+84 connections in 0.41s; 204.88 connections/user sec, bytes read 88084164
+84 connections in 4 real seconds, 1048621 bytes read per connection

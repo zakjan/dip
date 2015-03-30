@@ -12,8 +12,9 @@
 \usepackage{blindtext}
 \usepackage{dirtree}
 \usepackage{pifont}
+\usepackage{amsfonts}
 \usepackage{tikz}
-\usepackage{listings}
+\usepackage{minted}
 
 
 \newcommand{\myblindtext}{\textcolor{Gray}{\blindtext}}
@@ -26,6 +27,10 @@
 \newcommand{\nodeheight}{0.6cm}
 
 \definecolor{myOrange}{RGB}{255,204,0} % #ffcc00
+
+\usemintedstyle{borland}
+\setminted{breaklines,fontsize=\footnotesize}
+\setminted[c]{linenos}
 
 \csvset{
   myTable/.style={separator=semicolon,head to column names,table head=\toprule #1 \\ \midrule,table foot=\bottomrule}
@@ -70,6 +75,7 @@
 \input{text/aead.tex}
 \input{text/caesar.tex}
 \input{text/tls.tex}
+\input{text/openssl.tex}
 \input{text/realisation.tex}
 \input{text/testing.tex}
 \input{text/result.tex}

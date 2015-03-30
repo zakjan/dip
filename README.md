@@ -7,6 +7,9 @@
 - texlive-booktabs
 - texlive-csvsimple
 - texlive-dirtree
+- texlive-lineno
+- texlive-minted (local)
+- texlive-xstring
 
 ### FITthesis.cls edits
 

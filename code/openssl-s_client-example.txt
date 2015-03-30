@@ -1,0 +1,38 @@
+openssl s_client -connect 127.0.0.1:4444 -cipher DHE-RSA-AES128-GCM-SHA256
+
+CONNECTED(00000003)
+depth=0 C = XX, L = Default City, O = Default Company Ltd
+verify error:num=18:self signed certificate
+verify return:1
+depth=0 C = XX, L = Default City, O = Default Company Ltd
+verify return:1
+---
+Certificate chain
+ 0 s:/C=XX/L=Default City/O=Default Company Ltd
+   i:/C=XX/L=Default City/O=Default Company Ltd
+---
+Server certificate
+-----BEGIN CERTIFICATE-----
+...
+-----END CERTIFICATE-----
+subject=/C=XX/L=Default City/O=Default Company Ltd
+issuer=/C=XX/L=Default City/O=Default Company Ltd
+---
+No client certificate CA names sent
+Server Temp Key: DH, 1024 bits
+---
+SSL handshake has read 1704 bytes and written 289 bytes
+---
+New, TLSv1/SSLv3, Cipher is DHE-RSA-AES128-GCM-SHA256
+Server public key is 2048 bit
+Secure Renegotiation IS supported
+Compression: NONE
+Expansion: NONE
+SSL-Session:
+    Protocol  : TLSv1.2
+    Cipher    : DHE-RSA-AES128-GCM-SHA256
+...
+    Verify return code: 18 (self signed certificate)
+---
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+DONE

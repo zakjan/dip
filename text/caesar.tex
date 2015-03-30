@@ -1,14 +1,57 @@
 \chapter{Competition for Authenticated Encryption: Security, Applicability and Robustness}
 
-CAESAR is worldwide cryptographic competition, focused on finding new methods of authenticated encryption, that offer advantages against commonly used AES-GCM and will be suitable for widespread adoption. Submitted algorithms will be publicly evaluated by committee of researchers in fields of cryptography and cryptoanalysis.
+In 2013, CAESAR was announced. It is a worldwide cryptographic competition, focused on finding new methods of authenticated encryption, that offer advantages against commonly used AES-GCM and will be suitable for widespread adoption. Submitted algorithms will be publicly evaluated by committee of researchers in fields of cryptography and cryptoanalysis.
 
-\todo{popis algoritmů byly v soutěži, v čem se lišily, jaké a jak v nich byly nalezeny zranitelnosti a proto nepostoupily}
+This competition follows a long tradition of focused competitions in secret-key cryptography:
 
-\todo{výběr algoritmu pro implementaci}
+\begin{itemize}
+  \item In 1997, United States National Institute of Standards and Technology (NIST) announced an open competition for a new symmetric cupher, Advanced Encryption Standard (AES). This competition attracted 15 submissions from 50 cryptographers around the world. In the end, Rijndael was chosen as AES.
+  \item In 2004, European Network of Excellence in Cryptology (ECRYPT) announced the ECRYPT Stream Cipher Project (eSTREAM), a call for new stream ciphers suitable for widespread adoption. This call attracted 34 submissions from 100 cryptographers around the world. In the end, the eSTREAM committee selected a portfolio containing several stream ciphers.
+  \item In 2007, NIST announced an open competition for a new hash standard to Secure Hash Algorithm family (SHA-3). This competition attracted 64 submissions from 200 cryptographers around the world. In the end, Keccak was chosen as SHA-3.
+\end{itemize}
 
-\section{Submission requirements}
+All past cryptographic competitions attracted many submissions from cryptographers around the world, and then even more security and performance evaluations from cryptanalysts. They are generally viewed as having provided a tremendous boost to the cryptographic research community's understanding of underlying concepts, and a tremendous increase in confidence in the security of some existing cryptosystems. Similar comments are expected to apply to CAESAR. \cite{crypto-competitions}
 
-An \textbf{authenticated cipher} is a function with five byte-string inputs and one byte-string output. The five inputs are:
+
+\section{Functional requirements}
+
+For the purpose of CAESAR competition, an \textit{authenticated cipher} is a pair of encrypt and decrypt functions, meeting the following specific requirements.
+
+All inputs and outputs should be represented as opaque byte-strings (members of a set $\mathbb{Z}_{2^8}^*$), because they benefit from direct support of current computers to store and transmit them.
+
+A cipher is permitted to be defined using objects other then byte-strings, nevertheless it must specify an unambiguous relationship between those objects and byte-strings (e.g. endianness of integers).
+
+A cipher must specify a length of all fixed-length inputs. It is permitted to specify a maximum length of various-length inputs, but this limit must not be smaller than 65 kB and submissions are expected to include justification for any maximum length limits.
+
+No other restrictions on their structure should be imposed, all inputs meeting the length restrictions must be accepted.
+
+\subsection{Inputs and outputs}
+
+A \textit{plaintext} is a variable-length input/output, a piece of confidential information a sender wants to transmit to a receiver, as introduced in \autoref{toc/encryption}.
+
+A \textit{ciphertext} is a variable-length input/output counterpart of the plaintext, that can be transmitted over an insecure channel. it is usually longer then the plaintext, because it contains an \textit{authentication tag}. This length difference is permitted to be fixed constant, thus leaking the plaintext length via the ciphertext length. Designers are advised that minimizing ciphertext length is generally considered more valuable than hiding plaintext length.
+
+A \textit{key} is a fixed-length input, which determines the output of both encrypt and decrypt functions. The key must be shared between both communicating parties prior to encrypted communication. Without a key or with a different one then used in the encrypt function, the decrypt function produces no useful result. This follows the Kerckhoffs' principle as introduced in \autoref{toc/kerckhoffs-principle}.
+
+An \textit{associated data} is a variable-length input, a piece of information known by both communicating parties, which doesn't need to meet confidentiality requirement. However, its origin still needs to be verified by the receiving party. It can be for example some message metadata, such as version of used protocol.
+
+A \textit{nonce} (number used once) is a fixed-length input. It is a public value, which which is usually used as IV for the enclosed cipher. Such IVs should be unique for each encryption run, so it makes all ciphertexts undistinguishable even if the same key, message and associated data is used.
+
+However, CAESAR call for submissions requests an unusual authenticated encryption interface. The user, who wants to encrypt, instead of providing the usual \textit{four} arguments (the key, nonce (number), associated data, and message) for authenticated encryption, need to provide \textit{five} arguments. The nonce has been transformed into a \textit{public message number} and \textit{secret message number}. \cite{cryptoeprint:2013:242}
+
+A \textit{public message number} is a fixed-length input. It is a public value with the same requirements as the nonce in
+
+A \textit{secret message number} is a fixed-length input. It is a secret value, recoverable from the ciphertext, however it is not a part of the plaintext, and a single-use requirement may be imposed for it.
+
+If the one is required, than it can be put in the message specific position and treated as part of message.
+
+All inputs must meet various security purposes, as indicated by \autoref{table/caesar-inputs}.
+
+\todo{finish}
+
+\subsection{Encrypt function}
+
+The encrypt function has five byte-string inputs and one byte-string output. The five inputs are:
 
 \begin{description}
   \item[plaintext] variable-length
@@ -18,65 +61,21 @@ An \textbf{authenticated cipher} is a function with five byte-string inputs and 
   \item[key] fixed-length
 \end{description}
 
-The first four inputs have different security purposes, as indicated by \autoref{table/caesar-inputs}.
+The output is:
+
+\begin{description}
+  \item[ciphertext] variable-length
+\end{description}
+
+
+It must be possible to recover the plaintext and the secret message number from the ciphertext, associated data, public message number and key.
 
 \input{tables/caesar-inputs.tex}
 
-
-The output is a variable-length ciphertext. The first four inputs have different security purposes, as indicated by the following table:
-
 \section{C API}
+\label{toc/caesar-c-api}
 
-\begin{lstlisting}
-#define CRYPTO_KEYBYTES 16
-#define CRYPTO_NSECBYTES 0
-#define CRYPTO_NPUBBYTES 12
-#define CRYPTO_ABYTES 16
-
-#include "crypto_aead.h"
-
-int crypto_aead_encrypt(
-unsigned char *c,unsigned long long *clen,
-const unsigned char *m,unsigned long long mlen,
-const unsigned char *ad,unsigned long long adlen,
-const unsigned char *nsec,
-const unsigned char *npub,
-const unsigned char *k
-)
-{
-...
-... the code for the cipher implementation goes here,
-... generating a ciphertext c[0],c[1],...,c[*clen-1]
-... from a plaintext m[0],m[1],...,m[mlen-1]
-... and associated data ad[0],ad[1],...,ad[adlen-1]
-... and secret message number nsec[0],nsec[1],...
-... and public message number npub[0],npub[1],...
-... and secret key k[0],k[1],...
-...
-return 0;
-}
-
-int crypto_aead_decrypt(
-unsigned char *m,unsigned long long *mlen,
-unsigned char *nsec,
-const unsigned char *c,unsigned long long clen,
-const unsigned char *ad,unsigned long long adlen,
-const unsigned char *npub,
-const unsigned char *k
-)
-{
-...
-... the code for the cipher implementation goes here,
-... generating a plaintext m[0],m[1],...,m[*mlen-1]
-... and secret message number nsec[0],nsec[1],...
-... from a ciphertext c[0],c[1],...,c[clen-1]
-... and associated data ad[0],ad[1],...,ad[adlen-1]
-... and public message number npub[0],npub[1],...
-... and secret key k[0],k[1],...
-...
-return 0;
-}
-\end{lstlisting}
+\inputminted{c}{code/caesar-c-api.c}
 
 npub - IV
 nsec - nepoužito
@@ -134,6 +133,11 @@ Joltik
 \begin{description}
   \item[Online (one-pass)]
 \end{description}
+
+
+\todo{popis algoritmů byly v soutěži, v čem se lišily, jaké a jak v nich byly nalezeny zranitelnosti a proto nepostoupily}
+
+\todo{výběr algoritmu pro implementaci}
 
 
 
