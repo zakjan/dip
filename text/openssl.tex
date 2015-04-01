@@ -27,32 +27,38 @@ OpenSSL source code contains a lot of various directories, for my purposes only 
 
 \begin{itemize}
   \item \texttt{apps} -- command-line tools
-  \item \texttt{crypto} -- \textit{libcrypto} cryptographic library
-  \item \texttt{ssl} -- \textit{libssl} TLS protocol library
+  \item \texttt{crypto} -- libcrypto library
+  \item \texttt{ssl} -- libssl library
   \item \texttt{demos} -- examples
   \item \texttt{docs} -- man pages and howtos
   \item \texttt{include} -- include header files
   \item \texttt{util} -- perl scripts for C code generation
 \end{itemize}
 
-
-\subsection{apps}
-\subsection{crypto}
-\subsection{ssl}
+OpenSSL provides two primary libraries: libssl and libcrypto. The libcrypto library provides the fundamental cryptographic routines used by libssl. A user can however use libcrypto without using libssl.
 
 
-\section{Command-line interface}
+\section{Command-line tools}
 
-OpenSSL is primarily a library that is used by developers to include support for strong cryptography in their programs. However it is also a tool that provides access to much of its functionality from command line. This way it can be used by shell scripts or programming languages that do not have native bindings, but can run shell commands.
+OpenSSL is primarily a library that is used by developers to include support for strong cryptography in their programs. However it is also a tool that provides access to much of its functionality from command line. This way it can be used by shell scripts or programming languages that do not have native bindings, but can run shell commands. \cite{viega2002network}
 
-The CLI executable \texttt{openssl} has two modes of operation: interactive and batch. When the program is started without any options, it will enter interactive mode. A prompt is displayed indicating that it is ready to process your command. After each command is completed, the prompt is redisplayed, and it's once again ready to process another command. Commands entered in interactive mode are handled in precisely the same manner as if you'd entered them from the command line in batch mode, the only difference is that you don't need to type the name of executable before each command. However it is more common and illustrative to use the tool in batch mode.
+The \texttt{openssl} binary is an entry point for all commands. You call it following the pattern:
 
-In the batch mode, the program command is followed by a specific OpenSSL command and any options, each one separated by a space. Options normally begin with a hyphen and often require a parameter of their own, in which case the parameter is placed after a space. Unless indicated otherwise, the order in which you specify options is not significant. There are only a small number of cases in which the order is significant, usually because a specific option must appear on the command line as the last option specified. \cite[p.~23]{viega2002network}
+\begin{minted}{text}
+openssl command [command_opts] [command_args]
+\end{minted}
 
-OpenSSL CLI provides access to the following significant cryptographic operations and applications:
+Alternatively you can call it without arguments to enter the interactive mode with an \texttt{OpenSSL>} prompt. Then you can directly type your commands. You can leave the interactive mode with Ctrl+C or Ctrl+D or by typing \texttt{quit}.
+
+You can get a list of available commands by calling:
+
+\begin{minted}{text}
+openssl list-standard-commands
+\end{minted}
+
+OpenSSL binary provides command-line access to the following significant cryptographic operations and applications:
 
 \begin{itemize}
-  \item \texttt{openssl list-standard-commands} -- list of all CLI commands
   \item \texttt{openssl dgst} -- a message digest command, producing or verifying a digest of supplied file(s) using hash functions or digital signature algorithms
   \item \texttt{openssl enc} -- a symmetric cipher command, allowing data to be encrypted or decrypted using various block and stream ciphers, using keys derivated from passwords or explicitly provided
   \item \texttt{openssl speed} -- a benchmark to test the performance of all included cryptographic algorithms
@@ -71,6 +77,7 @@ OpenSSL supports a lot of cryptographic algorithms, some of them also have their
   \item \texttt{openssl list-cipher-algorithms} -- list of symmetric encryption algorithms
   \item \texttt{openssl list-cipher-commands} -- list of symmetric encryption pseudo-commands
   \item \texttt{openssl list-public-key-algorithms} -- list of public key algorithms
+  \item \texttt{openssl ciphers -v [\textit{cipherlist}]} -- list of TLS cipher suites, complying with the given cipherlist, or all by default
   \item \texttt{openssl ecparam -list\_curves} -- list of named elliptic curves
 \end{itemize}
 
@@ -167,4 +174,117 @@ It accepts the following significant options:
 \inputminted{text}{code/openssl-s_time-example.txt}
 
 
-\section{EVP API}
+\section{libcrypto library}
+
+The libcrypto\footnote{\url{https://wiki.openssl.org/index.php/Libcrypto_API}} library provides high level and low level interfaces for the implemented fundamental cryptographic algorithms.
+
+For most uses, users should use the high level interface that is provided for performing cryptographic operations. This is known as the EVP\footnote{\url{https://wiki.openssl.org/index.php/EVP}} interface (short for Envelope). This interface provides a suite of functions for performing encryption/decryption (both symmetric and asymmetric), signing/verifying, as well as generating hashes and MAC codes, across the full range of OpenSSL supported algorithms and modes. Working with the high level interface means that a lot of the complexity of performing cryptographic operations is hidden from view. A single consistent API is provided. In the event that you need to change your code to use a different algorithm (for example), then this is a simple change when using the high level interface. In addition low level issues such as padding and encryption modes are all handled for you.
+
+The EVP functions provide a high level interface to OpenSSL cryptographic functions. They provide the following features:
+
+\begin{itemize}
+  \item A single consistent interface regardless of the underlying algorithm or mode
+  \item Support for an extensive range of algorithms
+  \item Encryption/Decryption using both symmetric and asymmetric algorithms
+  \item Sign/Verify
+  \item Key derivation
+  \item Secure Hash functions
+  \item Message Authentication Codes
+  \item Support for external crypto engines
+\end{itemize}
+
+In addition to the high level interface, OpenSSL also provides low level interfaces for working directly with the individual algorithms. These low level interfaces are not recommended for the novice user, but provide a degree of control that may not be possible when using only the high level interface.
+
+
+\subsection{EVP API -- Symmetric encryption and decryption}
+\label{toc/openssl-evp-encryption}
+
+The EVP API of libcrypto library provides functions for performing symmetric encryption and decryption operations across a wide range of algorithms and modes. The following code shows how to use it to encrypt and decrypt a piece of confidential information.
+
+Encryption using the EVP API consists of the following stages:
+
+\begin{itemize}
+  \item Setting up a cipher context
+  \item Initializing the encryption operation, providing key, IV
+  \item Providing plaintext bytes to be encrypted
+  \item Finalizing the encryption operation
+\end{itemize}
+
+The sample \texttt{encrypt} function uses AES-128 in CBC mode. It takes as arguments the plaintext, the length of the plaintext, the key, and the IV. Also it takes in a buffer to put the ciphertext in (which we assume to be long enough), and will return the length of the ciphertext that it writtes.
+
+The length of plaintext is necessary, OpenSSL can't use \texttt{strlen} function to determine its length, because it can contain any data, even null (\texttt{\textbackslash0}) bytes. The length of key and IV is fixed, appropriate for the chosen cipher, which means both the key and IV 16 bytes long for AES-128 in CBC mode.
+
+The source code follows. It misses the most of error handling code, which would be necessary in a real application.
+
+\inputminted{c}{code/openss-evp-encrypt-example.c}
+
+Decryption using the EVP API consists of the following steps:
+
+\begin{itemize}
+  \item Setting up a cipher context
+  \item Initializing the decryption operation, providing key, IV
+  \item Providing ciphertext bytes to be decrypted
+  \item Finalizing the decryption operation
+\end{itemize}
+
+The sample \texttt{decrypt} function uses AES-128 in CBC mode. It takes almost the same arguments as the \texttt{encrypt} function, with the exception that the plaintext and the ciphertext are swapped.
+
+The source code follows. It misses the most of error handling code, which would be necessary in a real application.
+
+\inputminted{c}{code/openss-evp-decrypt-example.c}
+
+
+\subsection{EVP API -- Authenticated encryption and decryption}
+\label{toc/openssl-evp-aead-encryption}
+
+Following the recent anvances in authenticated encryption (also known as AEAD, see \todo{refit}), the EVP API of libcrypto library also supports the ability to perform authenticated encryption and decryption. It provides confidentiality by encrypting the data, and authenticity by creating a MAC tag over the encrypted data.
+
+Using AEAD ciphers is nearly identical to using standard symmetric encryption ciphers. In addition, a user can optionally provide some Additional Authenticated Data (AAD). The AAD data is not encrypted, and is typically passed to the recipient in plaintext along with the ciphertext. An example of AAD is the IP address and port number in a IP header used with IPsec.
+
+The output from the encryption operation will be the ciphertext, and a MAC tag. The MAC tag is subsequently used during the decryption operation to ensure that the ciphertext and AAD have not been tampered with.
+
+Authenticated encryption using the EVP API in much the same way as for symmetric encryption as described in \autoref{toc/openssl-evp-encryption}. The main differences are:
+
+\begin{itemize}
+  \item AAD data can be provided before encrypting the plaintext data
+  \item after the encryption is finished, the MAC tag needs to be obtained
+\end{itemize}
+
+The sample \texttt{encrypt} function uses AES-128 in GCM mode. It takes as arguments the plaintext, the length of the plaintext, the key, and the IV. Also it takes in a buffer to put the ciphertext and the MAC tag in (which we assume to be long enough), and will return the length of the ciphertext that it writtes.
+
+The length of plaintext is necessary, OpenSSL can't use \texttt{strlen} function to determine its length, because it can contain any data, even null (\texttt{\textbackslash0}) bytes. The length of key, IV and MAC tag is fixed, appropriate for the chosen cipher, which means the key 16 bytes long, the IV 12 bytes long and the MAC tag 16 bytes for AES-128 in GCM mode by default.
+
+The source code follows. It misses the most of error handling code, which would be necessary in a real application.
+
+\inputminted{c}{code/openss-evp-aead-encrypt-example.c}
+
+Authenticated decryption using the EVP API in much the same way as for symmetric decryption as described in \autoref{toc/openssl-evp-encryption}. The main differences are:
+
+\begin{itemize}
+  \item AAD data can be provided before decrypting the ciphertext data
+  \item before the decryption is finished, the expected MAC tag needs to be provided
+  \item a return value should be considered as a possible failure to authenticate ciphertext and/or AAD
+\end{itemize}
+
+The sample \texttt{decrypt} function uses AES-128 in GCM mode. It takes almost the same arguments as the \texttt{encrypt} function, with the exception that the plaintext and the ciphertext are swapped, and the MAC tag is provided by a user.
+
+The source code follows. It misses the most of error handling code, which would be necessary in a real application.
+
+\inputminted{c}{code/openss-evp-aead-decrypt-example.c}
+
+
+\subsection{EVP API -- Internals}
+
+Ciphers and Message Digest algorithms are identified by a unique \texttt{EVP\_CIPHER} and \texttt{EVP\_MD} object respectively. Users are not expected to create these themself, but instead use one of the built in functions to return one for the particular algorithm that he wish to use.
+
+An extract from \texttt{evp.h} header file listing some \texttt{EVP\_CIPHER} functions is shown below:
+
+\inputminted{c}{code/openssl-evp-ciphers-example.c}
+
+These ciphers are all variants of the AES (Advanced Encryption Standard) algorithm. There are two different key lengths shown - for 128 bit keys and 192 bit keys respectively. There are also a variety of different encryption modes shown, i.e. CTR, CCM, GCM, XTS, ECB and CBC. Not all algorithms support all modes, so a user should check in \texttt{evp.h} for the particular combination that he wants.
+
+The \texttt{EVP\_CIPHER} struct has the following signature:
+
+\inputminted{c}{code/openssl-evp-cipher.c}
+
+\section{libssl library}
