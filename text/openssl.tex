@@ -176,11 +176,11 @@ It accepts the following significant options:
 
 \section{libcrypto library}
 
-The libcrypto\footnote{\url{https://wiki.openssl.org/index.php/Libcrypto_API}} library provides high level and low level interfaces for the implemented fundamental cryptographic algorithms.
+The libcrypto\footnote{\url{https://wiki.openssl.org/index.php/Libcrypto_API}} library provides high-level and low-level interfaces for the implemented fundamental cryptographic algorithms.
 
-For most uses, users should use the high level interface that is provided for performing cryptographic operations. This is known as the EVP\footnote{\url{https://wiki.openssl.org/index.php/EVP}} interface (short for Envelope). This interface provides a suite of functions for performing encryption/decryption (both symmetric and asymmetric), signing/verifying, as well as generating hashes and MAC codes, across the full range of OpenSSL supported algorithms and modes. Working with the high level interface means that a lot of the complexity of performing cryptographic operations is hidden from view. A single consistent API is provided. In the event that you need to change your code to use a different algorithm (for example), then this is a simple change when using the high level interface. In addition low level issues such as padding and encryption modes are all handled for you.
+For most uses, users should use the high-level interface that is provided for performing cryptographic operations. This is known as the EVP\footnote{\url{https://wiki.openssl.org/index.php/EVP}} interface (short for Envelope). This interface provides a suite of functions for performing encryption/decryption (both symmetric and asymmetric), signing/verifying, as well as generating hashes and MAC codes, across the full range of OpenSSL supported algorithms and modes. Working with the high-level interface means that a lot of the complexity of performing cryptographic operations is hidden from view. A single consistent API is provided. In the event that you need to change your code to use a different algorithm (for example), then this is a simple change when using the high-level interface. In addition low-level issues such as padding and encryption modes are all handled for you.
 
-The EVP functions provide a high level interface to OpenSSL cryptographic functions. They provide the following features:
+The EVP functions provide a high-level interface to OpenSSL cryptographic functions. They provide the following features:
 
 \begin{itemize}
   \item A single consistent interface regardless of the underlying algorithm or mode
@@ -193,7 +193,59 @@ The EVP functions provide a high level interface to OpenSSL cryptographic functi
   \item Support for external crypto engines
 \end{itemize}
 
-In addition to the high level interface, OpenSSL also provides low level interfaces for working directly with the individual algorithms. These low level interfaces are not recommended for the novice user, but provide a degree of control that may not be possible when using only the high level interface.
+In addition to the high-level interface, OpenSSL also provides low-level interfaces for working directly with the individual algorithms. These low-level interfaces are not recommended for the novice user, but provide a degree of control that may not be possible when using only the high-level interface.
+
+Where possible, the high-level EVP interface should be used in preference to the low-level interfaces. This is because the code then becomes transparent to the algorithm used and much more flexible. Additionally, the EVP interface will ensure the use of platform specific cryptographic acceleration such as AES-NI. The low-level interfaces do not provide the guarantee.
+
+
+\subsection{EVP API -- Internals}
+
+A specific cipher or message digest algorithm is identified by an unique \texttt{EVP\_CIPHER} or \texttt{EVP\_MD} object respectively. OpenSSL user is not expected to create these themself, but instead they can use a built-in function to return the object of particular algorithm that they wish to use. In the following text I focus only on cipher algorithms.
+
+An extract from \texttt{evp.h} header file listing some \texttt{EVP\_CIPHER} functions is shown below:
+
+\inputminted{c}{code/openssl-evp-ciphers.c}
+
+These functions returns a \texttt{EVP\_CIPHER} struct with the following signature:
+
+\inputminted{c}{code/openssl-evp-cipher.c}
+
+The meaning of its important parameters follows:
+
+\begin{itemize}
+  \item \texttt{nid} -- integer; unique identifier
+  \item \texttt{block\_size} -- integer; cipher block size
+  \item \texttt{key\_len} -- integer; cipher key length
+  \item \texttt{iv\_len} -- integer; cipher IV length
+  \item \texttt{flags} -- bit array, represented as integer; cipher flags specifying its capabilities
+  \item \texttt{init} -- function pointer; called during initialization, it can allocate the cipher context before the operation
+  \item \texttt{do\_cipher} -- function pointer; called during sending the input data, it should perform the encrypt/decrypt operation
+  \item \texttt{cleanup} -- function pointer; called during finalization, it can free the cipher context after the operation
+  \item \texttt{ctx\_size} -- integer; cipher-specific context size, can be used to store cipher-specific data during the operation
+  \item \texttt{ctrl} -- function pointer; used to control cipher-specific actions
+\end{itemize}
+
+Also a cipher context \texttt{EVP\_CIPHER\_CTX} must be allocated and initialized, to store setting and state during the encrypt/decrypt operation:
+
+\inputminted{c}{code/openssl-evp-cipher-ctx-new.c}
+
+Note the cipher context is different from cipher-specific context. The cipher-specific context is stored inside of the cipher context, however the cipher-specific context is allocated and freed by the cipher itself in its \texttt{init} and \texttt{cleanup} functions, which are called by EVP internally, and a user doesn't need to care about it.
+
+So now we are prepared to perform the operation. First, we need to set a cipher, a secret key, an initialization vector (IV), and if we are going to perform an encrypt or decrypt operation. We can use either specifically named \texttt{EVP\_EncryptInit\_ex} or \texttt{EVP\_DecryptInit\_ex} functions. There is also an universal \texttt{EVP\_CipherInit\_ex} function with \texttt{enc} parameter. However I recommend the first option, because usually we are sure which operation do we want to perform, so it should be hardcoded using the specific functions instead of depending of an integer parameter. Ihese functions internally calls the cipher's \texttt{init} function from the \texttt{EVP\_CIPHER} structure.
+
+\inputminted{c}{code/openssl-evp-cipherinit.c}
+
+Any input data should be sent to the cipher by an \texttt{EVP\_EncryptUpdate} or \texttt{EVP\_DecryptUpdate}, which internally calls the cipher's \texttt{do\_cipher} function from the \texttt{EVP\_CIPHER} structure. It accepts the input data and returns the encrypted/decrypted output data. Usualy it can be called multiple times, if the cipher supports streaming.
+
+\inputminted{c}{code/openssl-evp-cipherupdate.c}
+
+After the input data block ends, an \texttt{EVP\_EncryptFinal\_ex} or \texttt{EVP\_DecryptFinal\_ex}, which internally calls the cipher's \texttt{cleanup} function from the \texttt{EVP\_CIPHER} structure. This function can append few more bytes to output, for example a padding or an authentication tag.
+
+\inputminted{c}{code/openssl-evp-cipherfinal.c}
+
+After all cipher operations were finished, the cipher context must be cleaned up and freed:
+
+\inputminted{c}{code/openssl-evp-cipher-ctx-free.c}
 
 
 \subsection{EVP API -- Symmetric encryption and decryption}
@@ -216,7 +268,7 @@ The length of plaintext is necessary, OpenSSL can't use \texttt{strlen} function
 
 The source code follows. It misses the most of error handling code, which would be necessary in a real application.
 
-\inputminted{c}{code/openss-evp-encrypt-example.c}
+\inputminted{c}{code/openssl-evp-encrypt.c}
 
 Decryption using the EVP API consists of the following steps:
 
@@ -231,13 +283,13 @@ The sample \texttt{decrypt} function uses AES-128 in CBC mode. It takes almost t
 
 The source code follows. It misses the most of error handling code, which would be necessary in a real application.
 
-\inputminted{c}{code/openss-evp-decrypt-example.c}
+\inputminted{c}{code/openssl-evp-decrypt.c}
 
 
 \subsection{EVP API -- Authenticated encryption and decryption}
 \label{toc/openssl-evp-aead-encryption}
 
-Following the recent anvances in authenticated encryption (also known as AEAD, see \todo{refit}), the EVP API of libcrypto library also supports the ability to perform authenticated encryption and decryption. It provides confidentiality by encrypting the data, and authenticity by creating a MAC tag over the encrypted data.
+Following the recent advances in AEAD, the EVP API of libcrypto library also supports the ability to perform authenticated encryption and decryption. It provides confidentiality by encrypting the data, and authenticity by creating a MAC tag over the encrypted data.
 
 Using AEAD ciphers is nearly identical to using standard symmetric encryption ciphers. In addition, a user can optionally provide some Additional Authenticated Data (AAD). The AAD data is not encrypted, and is typically passed to the recipient in plaintext along with the ciphertext. An example of AAD is the IP address and port number in a IP header used with IPsec.
 
@@ -256,7 +308,7 @@ The length of plaintext is necessary, OpenSSL can't use \texttt{strlen} function
 
 The source code follows. It misses the most of error handling code, which would be necessary in a real application.
 
-\inputminted{c}{code/openss-evp-aead-encrypt-example.c}
+\inputminted{c}{code/openssl-evp-aead-encrypt.c}
 
 Authenticated decryption using the EVP API in much the same way as for symmetric decryption as described in \autoref{toc/openssl-evp-encryption}. The main differences are:
 
@@ -270,21 +322,9 @@ The sample \texttt{decrypt} function uses AES-128 in GCM mode. It takes almost t
 
 The source code follows. It misses the most of error handling code, which would be necessary in a real application.
 
-\inputminted{c}{code/openss-evp-aead-decrypt-example.c}
+\inputminted{c}{code/openssl-evp-aead-decrypt.c}
 
+Currently, there is no standardized way to get and set the MAC tag for different ciphers. All current implementations use the universal \texttt{EVP\_CIPHER\_CTX\_ctrl} function, which allows various cipher specific actions. However, the action identifier is specific for each cipher, e.g. \texttt{EVP\_CTRL\_GCM\_GET\_TAG}. This should change in future version of OpenSSL, there are new universal action identifiers such as \texttt{EVP\_CTRL\_AEAD\_GET\_TAG} in development code, used by both currently implemented AEAD ciphers (AES-GCM, AES-CCM).
 
-\subsection{EVP API -- Internals}
-
-Ciphers and Message Digest algorithms are identified by a unique \texttt{EVP\_CIPHER} and \texttt{EVP\_MD} object respectively. Users are not expected to create these themself, but instead use one of the built in functions to return one for the particular algorithm that he wish to use.
-
-An extract from \texttt{evp.h} header file listing some \texttt{EVP\_CIPHER} functions is shown below:
-
-\inputminted{c}{code/openssl-evp-ciphers-example.c}
-
-These ciphers are all variants of the AES (Advanced Encryption Standard) algorithm. There are two different key lengths shown - for 128 bit keys and 192 bit keys respectively. There are also a variety of different encryption modes shown, i.e. CTR, CCM, GCM, XTS, ECB and CBC. Not all algorithms support all modes, so a user should check in \texttt{evp.h} for the particular combination that he wants.
-
-The \texttt{EVP\_CIPHER} struct has the following signature:
-
-\inputminted{c}{code/openssl-evp-cipher.c}
 
 \section{libssl library}
