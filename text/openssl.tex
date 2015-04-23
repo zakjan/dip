@@ -175,6 +175,7 @@ It accepts the following significant options:
 
 
 \section{libcrypto library}
+\label{toc/openssl-libcrypto}
 
 The libcrypto\footnote{\url{https://wiki.openssl.org/index.php/Libcrypto_API}} library provides high-level and low-level interfaces for the implemented fundamental cryptographic algorithms.
 
@@ -198,15 +199,16 @@ In addition to the high-level interface, OpenSSL also provides low-level interfa
 Where possible, the high-level EVP interface should be used in preference to the low-level interfaces. This is because the code then becomes transparent to the algorithm used and much more flexible. Additionally, the EVP interface will ensure the use of platform specific cryptographic acceleration such as AES-NI. The low-level interfaces do not provide the guarantee.
 
 
-\subsection{EVP API -- Internals}
+\subsection{EVP API}
+\label{toc/openssl-evp}
 
-A specific cipher or message digest algorithm is identified by an unique \texttt{EVP\_CIPHER} or \texttt{EVP\_MD} object respectively. OpenSSL user is not expected to create these themself, but instead they can use a built-in function to return the object of particular algorithm that they wish to use. In the following text I focus only on cipher algorithms.
+A specific cipher or message digest algorithm is identified by an unique \texttt{EVP\_CIPHER} or \texttt{EVP\_MD} struct respectively. OpenSSL user is not expected to create these themself, but instead they can use a built-in function to return the struct of particular algorithm that they wish to use. In the following text I focus only on cipher algorithms.
 
-An extract from \texttt{evp.h} header file listing some \texttt{EVP\_CIPHER} functions is shown below:
+An extract from \texttt{evp.h} header file listing some functions returning \texttt{EVP\_CIPHER} struct is shown below. There is a specific function for every supported combination of cipher algorithm and its parameters (a key length, a block mode, etc.).
 
 \inputminted{c}{code/openssl-evp-ciphers.c}
 
-These functions returns a \texttt{EVP\_CIPHER} struct with the following signature:
+The \texttt{EVP\_CIPHER} is represented by the following signature:
 
 \inputminted{c}{code/openssl-evp-cipher.c}
 
@@ -222,28 +224,32 @@ The meaning of its important parameters follows:
   \item \texttt{do\_cipher} -- function pointer; called during sending the input data, it should perform the encrypt/decrypt operation
   \item \texttt{cleanup} -- function pointer; called during finalization, it can free the cipher context after the operation
   \item \texttt{ctx\_size} -- integer; cipher-specific context size, can be used to store cipher-specific data during the operation
-  \item \texttt{ctrl} -- function pointer; used to control cipher-specific actions
+  \item \texttt{ctrl} -- function pointer; used to invoke special actions, which don't have a specific field in the \texttt{EVP\_CAESAR} struct
 \end{itemize}
 
-Also a cipher context \texttt{EVP\_CIPHER\_CTX} must be allocated and initialized, to store setting and state during the encrypt/decrypt operation:
+Prior to performing the encrypt/decrypt operation, a cipher context must be allocated and initialized to store setting and state during the operation. The cipher context is represented by \texttt{EVP\_CIPHER\_CTX} struct.
 
 \inputminted{c}{code/openssl-evp-cipher-ctx-new.c}
 
 Note the cipher context is different from cipher-specific context. The cipher-specific context is stored inside of the cipher context, however the cipher-specific context is allocated and freed by the cipher itself in its \texttt{init} and \texttt{cleanup} functions, which are called by EVP internally, and a user doesn't need to care about it.
 
-So now we are prepared to perform the operation. First, we need to set a cipher, a secret key, an initialization vector (IV), and if we are going to perform an encrypt or decrypt operation. We can use either specifically named \texttt{EVP\_EncryptInit\_ex} or \texttt{EVP\_DecryptInit\_ex} functions. There is also an universal \texttt{EVP\_CipherInit\_ex} function with \texttt{enc} parameter. However I recommend the first option, because usually we are sure which operation do we want to perform, so it should be hardcoded using the specific functions instead of depending of an integer parameter. Ihese functions internally calls the cipher's \texttt{init} function from the \texttt{EVP\_CIPHER} structure.
+So now we are prepared to perform the encrypt/decrypt operation. First, we need to set a cipher, a secret key and an initialization vector (IV). We can use an initialization function, specifically named \texttt{EVP\_EncryptInit\_ex} or \texttt{EVP\_DecryptInit\_ex}. There is also an universal \texttt{EVP\_CipherInit\_ex} function with \texttt{enc} parameter, which controls which operation is performed. However I recommend the first option, because usually we are sure which operation do we want to perform, so it should be hardcoded using the specific functions instead of depending of an integer parameter. It internally calls the cipher's \texttt{init} function from the \texttt{EVP\_CIPHER} struct.
 
 \inputminted{c}{code/openssl-evp-cipherinit.c}
 
-Any input data should be sent to the cipher by an \texttt{EVP\_EncryptUpdate} or \texttt{EVP\_DecryptUpdate}, which internally calls the cipher's \texttt{do\_cipher} function from the \texttt{EVP\_CIPHER} structure. It accepts the input data and returns the encrypted/decrypted output data. Usualy it can be called multiple times, if the cipher supports streaming.
+Any input data should be sent to the cipher by an update function \texttt{EVP\_EncryptUpdate} or \texttt{EVP\_DecryptUpdate}. It accepts the input data, and it fills the provided output buffer with the encrypted/decrypted output data, and returns a number of written bytes. Usualy it can be called multiple times, if the cipher supports streaming.
+
+The functions internally calls the cipher's \texttt{do\_cipher} function with the same parameters.
 
 \inputminted{c}{code/openssl-evp-cipherupdate.c}
 
-After the input data block ends, an \texttt{EVP\_EncryptFinal\_ex} or \texttt{EVP\_DecryptFinal\_ex}, which internally calls the cipher's \texttt{cleanup} function from the \texttt{EVP\_CIPHER} structure. This function can append few more bytes to output, for example a padding or an authentication tag.
+After the input data block ends, a finalization function \texttt{EVP\_EncryptFinal\_ex} or \texttt{EVP\_DecryptFinal\_ex} needs to be called. This function can append few more bytes to output, for example a padding or an authentication tag.
+
+The functions internally call the cipher's \texttt{do\_cipher} function with null parameters to signalize the end of operation. The cipher can react by appending few more bytes to output, for example a padding or an authentication tag.
 
 \inputminted{c}{code/openssl-evp-cipherfinal.c}
 
-After all cipher operations were finished, the cipher context must be cleaned up and freed:
+After all cipher operations were finished, the cipher context must be cleaned up and freed by the \texttt{EVP\_CIPHER\_CTX\_free} function. It internally calls the cipher's \texttt{cleanup} function.
 
 \inputminted{c}{code/openssl-evp-cipher-ctx-free.c}
 
@@ -251,7 +257,7 @@ After all cipher operations were finished, the cipher context must be cleaned up
 \subsection{EVP API -- Symmetric encryption and decryption}
 \label{toc/openssl-evp-encryption}
 
-The EVP API of libcrypto library provides functions for performing symmetric encryption and decryption operations across a wide range of algorithms and modes. The following code shows how to use it to encrypt and decrypt a piece of confidential information.
+With the knowledge of EVP API as described in \autoref{toc/openssl-evp}, a user can perform symmetric encryption and decryption operations across a wide range of algorithms and modes. The following code shows how to use it to encrypt and decrypt a piece of confidential information.
 
 Encryption using the EVP API consists of the following stages:
 
