@@ -4,15 +4,16 @@ All CAESAR candidates publish its encrypt/decrypt primitives through the same CA
 
 This chapter documents my source code added to OpenSSL 1.0.2. Basically I implemented a bridge between OpenSSL EVP API and CAESAR API. I can compile my customized OpenSSL with any CAESAR cipher, and it works. For my testing purposes, I chose the NORX cipher, see \autoref{toc/caesar-norx}.
 
+There is no public documentation about implementing a new cipher or a new TLS cipher suite into OpenSSL, so I had to read through the OpenSSL source code a lot, tracing the code of already implemented ciphers and cipher suites.
+
+The OpenSSL code is a joint work of many security experts, verified by real-world production usage and it can contain a lot of undocumented hidden knowledge. Because of no public documentation about this topic, I consider my implementation as experimental and O'm sure that my implementation is not perfect, it can contain hidden security bugs. Having this in mind, \textbf{I don't recomment my code for production under any circumstances.}
+
 \section{Cipher}
+\label{toc/implementation-cipher}
 
 EVP API provides an universal interface to symmetric encryption, here a source code using it is independent on the chosen cipher. This is the main reason why I chose to implement a new cipher into the OpenSSL EVP API.
 
 EVP API is a high-level interface to OpenSSL cryptographic functions. While OpenSSL also has direct interfaces for cryptographic operations, the EVP interface separates the operations from the actual backend used. That way, the actual implementation that is used can be changed, and one can specify an engine to use for the operations.
-
-There is no public documentation for implementing a new cipher into OpenSSL EVP API, so I had to read through the OpenSSL source code a lot, tracing the code of already implemented ciphers.
-
-Because of no documentation on this topic, I'm nearly sure that my implementation is not perfect, and it can contain hidden bugs. Having this in mind, \textbf{I don't recomment my code for production usage without proper security code review.}
 
 \subsection{Implementation}
 
@@ -24,30 +25,50 @@ I defined a new function in \texttt{crypto/evp/evp.h} file returning a reference
 
 I implemented all cipher related code in \texttt{crypto/evp/caesar/e\_caesar.c} file. The cipher is defined by an \texttt{EVP\_CIPHER} struct, which holds all cipher-cpecific setting and pointers to functions performing related operations. See \autoref{toc/openssl-libcrypto} for more detailed description of the EVP API.
 
-\inputminted{c}{code/caesar_header.c}
+\inputminted{c}{code/openssl/crypto/evp/caesar/e_caesar.c}
 
 The cipher's \texttt{init} function (specifically \texttt{caesar\_init}) initializes the cipher context in \texttt{EVP\_CAESAR\_CTX} struct, and copies the key and the IV into the context, so it can be used later by the \texttt{caesar\_cipher} function.
 
-\inputminted{c}{code/caesar_init.c}
+\inputminted{c}{code/openssl/crypto/evp/caesar/e_caesar_init.c}
 
-The cipher's \texttt{do\_cipher} function (specifically \texttt{caesar\_cipher}) is the main processing function. It applies the cipher to the input data, and writes the result of the encrypt/decrypt operation to the output buffer. If the function is called with no output buffer, the input data is considered as associated data, which contributes to authentication tag.
+The cipher's \texttt{do\_cipher} function (specifically \texttt{caesar\_cipher}) is the main processing function. It applies the cipher to the input data, and writes the result of the encrypt/decrypt operation to the output buffer. If the function is called with no output buffer, the input data is considered as associated data, which contributes to MAC tag.
 
-\inputminted{c}{code/caesar_cipher.c}
-\inputminted{c}{code/caesar_set_ad.c}
-\inputminted{c}{code/caesar_encrypt.c}
-\inputminted{c}{code/caesar_decrypt.c}
+\inputminted{c}{code/openssl/crypto/evp/caesar/e_caesar_cipher.c}
+\inputminted{c}{code/openssl/crypto/evp/caesar/e_caesar_set_ad.c}
+\inputminted{c}{code/openssl/crypto/evp/caesar/e_caesar_encrypt.c}
+\inputminted{c}{code/openssl/crypto/evp/caesar/e_caesar_decrypt.c}
 
 The cipher's \texttt{cleanup} function (specifically \texttt{caesar\_cleanup}) is used to cleanup and free all memory allocated by init functions.
 
-\inputminted{c}{code/caesar_cleanup.c}
+\inputminted{c}{code/openssl/crypto/evp/caesar/e_caesar_cleanup.c}
 
 The cipher's \texttt{ctrl} function (specifically \texttt{caesar\_ctrl}) is used to invoke special actions, which don't have a specific field in the \texttt{EVP\_CIPHER} struct. I needed only one specific action, \texttt{EVP\_CTRL\_AEAD\_TLS1\_AAD} for setting associated data from TLS library.
 
-\inputminted{c}{code/caesar_ctrl.c}
+\inputminted{c}{code/openssl/crypto/evp/caesar/e_caesar_ctrl.c}
+
+Finally I registered the new cipher in \texttt{crypto/evp/c\_allc.c} file. From now on, the new cipher is available for use by its name, "caesar".
+
+\inputminted{c}{code/openssl/crypto/evp/c_allc.c}
 
 \subsection{Testing}
 
-I created a simple Shell script to test my new cipher. It generates a random key and IV, and it encrypts and decrypts a sample plaintext. If both plaintexts are equal, and no error is thrown, the operation was successfull.
+I created a simple Shell script to test my new cipher. It uses a fixed sample plaintext, and it generates a random key and IV.
+
+It uses OpenSSL CLI command \texttt{enc} as described in \autoref{toc/openssl-enc}. It encrypts and decrypts a sample plaintext with my new \texttt{caesar} cipher.
+
+In order to verify that my new cipher implementation works as intended, the following criterias must pass:
+
+\begin{itemize}
+  \item no error is thrown \\ An error can be thrown because of various reasons:
+  \begin{itemize}
+    \item the new cipher is not implemented correctly
+    \item invalid padding found during decryption
+    \item invalid MAC tag found during decryption
+  \end{itemize}
+  \item the output plaintext from decrypt operation equals to the original plaintext
+  \item if any of the key, the IV, and the input plaintext changes, the ciphertext output changes as well
+  \item if the key and IV is set to a fixed value, the ciphertext output from encrypt operation should stay the same
+\end{itemize}
 
 \inputminted{bash}{code/test-enc.sh}
 
@@ -55,12 +76,24 @@ The script's output follows.
 
 \inputminted{text}{code/test-enc.sh.out}
 
+Note that OpenSSL CLI \texttt{enc} command currently doesn't support any way to provide additional authenticated data. Actually it doesn't support AEAD ciphers at all, there is a condition checking for AEAD flag in the cipher's flags field, which throws an error. I commented off this condition, because I needed this command to test the new cipher. There is no harm in doing so, additional authenticated data can be empty, and the MAC tag is still checked by the cipher itself.
+
+\inputminted{c}{code/openssl/apps/enc.c}
+
 
 \section{TLS cipher suite}
+\label{toc/implementation-cipher-suite}
 
-I implemented a new TLS cipher suite named CAESAR, which can be nwgotiated by client and server in TLS handshake.
+Any TLS cipher suite consists of various selected cryptographic primitives, providing key exchange, authentication, encryption and MAC. My thesis focuses only on a new encryption algorithm, so I implemented a new TLS cipher suite, which consists of Diffie-Hellman ephemeral (DHE) key exchange, RSA authentication, CAESAR encryption (see \autoref{toc/implementation-cipher} for details about implementation) and SHA256 pseudorandom function. There is no MAC, because MAC is already provided by the CAESAR AEAD cipher itself.
 
-During the TLS handshake (see \todo{refit} for details), a cipher suites are represented by IDs. Public cipher suites are registered by IANA organization\footnote{\url{iana.org/assignments/tls-parameters/tls-parameters.xhtml}} and they are assigned with unique IDs, which are known to all parties. All cipher suites whose first byte is 0xFF are considered private and can be used for defining local/experimental algorithms. \cite[p.~55]{rfc2246}
+I named the new cipher suite to be consistent with existing cipher suite names convention, \texttt{TLS\_DHE\_RSA\_WITH\_CAESAR\_SHA256}.
+
+The new cipher suite which can be negotiated by client and server in TLS handshake (see \autoref{toc/tls-handshake} for details). During the handshake, cipher suites are represented by IDs. Public cipher suites are registered by IANA organization\footnote{\url{iana.org/assignments/tls-parameters/tls-parameters.xhtml}} and they are assigned with unique IDs, which are known to all parties. I didn't want to publish the new cipher suite to production, I consider it experimental, so I used a private space of IDs: \textit{"All cipher suites whose first byte is 0xFF are considered private and can be used for defining local/experimental algorithms."} \cite[p.~55]{rfc2246} So I chose the ID for the new cipher suite to be \texttt{FF81}.
+
+Because I implemented the new cipher using the OpenSSL EVP API, it was really simple to use it in the new cipher suite.
+
+\inputminted{c}{code/openssl/ssl/tls1.h}
+\inputminted{c}{code/openssl/ssl/s3_lib.c}
 
 \subsection{Implementation}
 

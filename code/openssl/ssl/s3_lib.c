@@ -1,0 +1,18 @@
+OPENSSL_GLOBAL SSL_CIPHER ssl3_ciphers[] = {
+  ...
+  {
+    1,
+    TLS1_TXT_DHE_RSA_WITH_CAESAR_SHA256,
+    TLS1_CK_DHE_RSA_WITH_CAESAR_SHA256,
+    SSL_kEDH,
+    SSL_aRSA,
+    SSL_CAESAR,
+    SSL_AEAD,
+    SSL_TLSV1_2,
+    SSL_NOT_EXP | SSL_HIGH,
+    SSL_HANDSHAKE_MAC_SHA256 | TLS1_PRF_SHA256,
+    128,
+    128,
+  },
+  ...
+};
