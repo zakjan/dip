@@ -1,8 +1,4 @@
-\section{Browser security}
-
-
-
-\subsection{Security indication in browsers}
+\chapter{Security indication in browsers}
 
 There are different levels of security, that can be achieved by Browser security. All Internet browsers have different criterias to indicate user that connection from his computer to remote server is really secure.
 
@@ -11,7 +7,11 @@ We can divide browsers' security indication to five categories:
 \begin{itemize}
   \item No certificate
   \item Untrusted certificate
-  \item Trusted certificate, mixed content
+  \item Trusted certificate with warning
+  \begin{itemize}
+    \item warning content
+    \item obsolete cryptographic primitives
+  \end{itemize}
   \item Trusted certificate
   \item Trusted certificate with Extended Validation
 \end{itemize}
@@ -31,8 +31,8 @@ We can divide browsers' security indication to five categories:
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
-    \includegraphics[scale=0.6]{images/browsers/ch-mixed.png}
-    \caption{Trusted certificate, mixed content}
+    \includegraphics[scale=0.6]{images/browsers/ch-warning.png}
+    \caption{Trusted certificate with warning}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
@@ -60,8 +60,8 @@ We can divide browsers' security indication to five categories:
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
-    \includegraphics[scale=0.6]{images/browsers/ff-mixed.png}
-    \caption{Trusted certificate, mixed content}
+    \includegraphics[scale=0.6]{images/browsers/ff-warning.png}
+    \caption{Trusted certificate with warning}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
@@ -89,8 +89,8 @@ We can divide browsers' security indication to five categories:
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
-    \includegraphics[scale=0.6]{images/browsers/ie-mixed.png}
-    \caption{Trusted certificate, mixed content}
+    \includegraphics[scale=0.6]{images/browsers/ie-warning.png}
+    \caption{Trusted certificate with warning}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
@@ -118,8 +118,8 @@ We can divide browsers' security indication to five categories:
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
-    \includegraphics[scale=0.6]{images/browsers/iemetro-mixed.png}
-    \caption{Trusted certificate, mixed content}
+    \includegraphics[scale=0.6]{images/browsers/iemetro-warning.png}
+    \caption{Trusted certificate with warning}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
@@ -147,8 +147,8 @@ We can divide browsers' security indication to five categories:
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
-    \includegraphics[scale=0.6]{images/browsers/o-mixed.png}
-    \caption{Trusted certificate, mixed content}
+    \includegraphics[scale=0.6]{images/browsers/o-warning.png}
+    \caption{Trusted certificate with warning}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
@@ -176,8 +176,8 @@ We can divide browsers' security indication to five categories:
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
-    \includegraphics[scale=0.6]{images/browsers/s-mixed.png}
-    \caption{Trusted certificate, mixed content}
+    \includegraphics[scale=0.6]{images/browsers/s-warning.png}
+    \caption{Trusted certificate with warning}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering

@@ -21,6 +21,3 @@
     * klíčová slova
     * poděkování
     * prohlášení
-* přílohy
-    * přesunout sem TLS konstanty
-    * přesunout sem obrázky z chování prohlížečů
