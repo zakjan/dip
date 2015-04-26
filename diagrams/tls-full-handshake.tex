@@ -39,7 +39,7 @@
     \path [line] (server12) -- (client12) node[above,near start] {[\textit{ChangeCipherSpec}]};
     \path [line] (server13) -- (client13) node[above,near start] {\textit{Finished}};
     \path [draw] ($(client13b)-(0.5*\nodewidth,0)$) -- ($(server13b)+(0.5*\nodewidth,0)$) node[above,midway] {handshake completed};
-    \path [line,<->] (client14) -- (server14) node[above,midway] {application data};
+    \path [line,<->] (client14) -- (server14) node[above,midway] {\textit{ApplicationData}};
 
     \node [below=0 of table,xshift=-5mm] {
       \begin{tabular}{cl}

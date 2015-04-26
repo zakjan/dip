@@ -1,5 +1,11 @@
 \begin{table}
   \centering
-  \csvreader[tabular=cclp{7.75cm},myTable={Dec & Hex & Name}]{tables/tls-alert-message-levels.csv}{}{\dec & \texttt{\hex} & \name}
+
+  \begin{tabular}{cclp{7.75cm}}
+    \csvtable{tables/tls-alert-message-levels.csv}
+      {Dec & Hex & Name}
+      {\csvcoli & \texttt{\csvcolii} & \csvcoliii}
+  \end{tabular}
+
   \caption{TLS alert message levels}
 \end{table}

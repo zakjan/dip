@@ -1,0 +1,6 @@
+no;source;destination;content
+4;client;server;ClientHello
+6;server;client;ServerHello, Certificate, ServerKeyExchange, ServerHelloDone
+7;client;server;ClientKeyExchange, ChangeCipherSpec, Finished (encrypted)
+8;server;client;NewSessionTicket, ChangeCipherSpec, Finished (encrypted)
+11;client;server;ApplicationData

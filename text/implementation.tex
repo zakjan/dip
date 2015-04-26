@@ -46,7 +46,7 @@ The cipher's \texttt{ctrl} function (specifically \texttt{caesar\_ctrl}) is used
 
 \inputminted{c}{code/openssl/crypto/evp/caesar/e_caesar_ctrl.c}
 
-Finally I registered the new cipher in \texttt{crypto/evp/c\_allc.c} file. From now on, the new cipher is available for use by its name, "caesar".
+Finally I registered the new cipher in \texttt{crypto/evp/c\_allc.c} file. From now on, the new cipher is available for use by its name, \texttt{caesar}.
 
 \inputminted{c}{code/openssl/crypto/evp/c_allc.c}
 
@@ -86,15 +86,79 @@ Note that OpenSSL CLI \texttt{enc} command currently doesn't support any way to 
 
 Any TLS cipher suite consists of various selected cryptographic primitives, providing key exchange, authentication, encryption and MAC. My thesis focuses only on a new encryption algorithm, so I implemented a new TLS cipher suite, which consists of Diffie-Hellman ephemeral (DHE) key exchange, RSA authentication, CAESAR encryption (see \autoref{toc/implementation-cipher} for details about implementation) and SHA256 pseudorandom function. There is no MAC, because MAC is already provided by the CAESAR AEAD cipher itself.
 
-I named the new cipher suite to be consistent with existing cipher suite names convention, \texttt{TLS\_DHE\_RSA\_WITH\_CAESAR\_SHA256}.
+I named the new cipher suite to be consistent with existing cipher suites, \texttt{TLS\_DHE\_RSA\_WITH\_CAESAR\_SHA256} by IANA conventions and \texttt{DHE-RSA-CAESAR-SHA256} by OpenSSL conventions.
 
-The new cipher suite which can be negotiated by client and server in TLS handshake (see \autoref{toc/tls-handshake} for details). During the handshake, cipher suites are represented by IDs. Public cipher suites are registered by IANA organization\footnote{\url{iana.org/assignments/tls-parameters/tls-parameters.xhtml}} and they are assigned with unique IDs, which are known to all parties. I didn't want to publish the new cipher suite to production, I consider it experimental, so I used a private space of IDs: \textit{"All cipher suites whose first byte is 0xFF are considered private and can be used for defining local/experimental algorithms."} \cite[p.~55]{rfc2246} So I chose the ID for the new cipher suite to be \texttt{FF81}.
-
-Because I implemented the new cipher using the OpenSSL EVP API, it was really simple to use it in the new cipher suite.
-
-\inputminted{c}{code/openssl/ssl/tls1.h}
-\inputminted{c}{code/openssl/ssl/s3_lib.c}
+The new cipher suite which can be negotiated by client and server in TLS handshake (see \autoref{toc/tls-handshake} for details). During the handshake, cipher suites are represented by IDs. Public cipher suites are registered by IANA organization\footnote{\url{http://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml}} and they are assigned with unique IDs, which are known to all parties. I didn't want to publish the new cipher suite to production, I consider it experimental, so I used a private space of IDs: \textit{"All cipher suites whose first byte is 0xFF are considered private and can be used for defining local/experimental algorithms."} \cite[p.~55]{rfc2246} So I chose the ID for the new cipher suite to be \texttt{FF81}.
 
 \subsection{Implementation}
 
+OpenSSL code related to TLS cipher suites is capable of using EVP API, thus it was really simple to implement the new cipher suite using the new cipher from \autoref{toc/implementation-cipher}.
+
+First I added a few new constants to \texttt{ssl/tls1.h}, \texttt{ssl/ssl\_locl.h} and \texttt{ssl/t1\_trce.c} files, defining IDs and names of the new cipher suite.
+
+\inputminted{c}{code/openssl/ssl/tls1.h}
+\inputminted{c}{code/openssl/ssl/ssl_locl.h}
+\inputminted{c}{code/openssl/ssl/t1_trce.c}
+
+I added a new cipher suite definition to \texttt{ssl/s3\_lib.c} file, where I referenced the new cipher using the new constants.
+
+\inputminted{c}{code/openssl/ssl/s3_lib.c}
+
+In \texttt{ssl/ssl\_ciph.c} file I found every code responsible for finding a correct EVP cipher by the new constants, and I added there a condition branch returning the new cipher.
+
+\inputminted{c}{code/openssl/ssl/ssl_ciph.c}
+
 \subsection{Testing}
+
+I used OpenSSL CLI commands \texttt{s\_server} and \texttt{s\_client} as described in \autoref{toc/openssl-s_server} and \autoref{toc/openssl-s_client}. I run them simultaneously, each command in a separate terminal on a single computer. Server and client are connected to each other byu specifying the same single port \texttt{4444}.
+
+The \texttt{s\_server} command creates a TCP server. It listens on a specified port (\texttt{4444}) and forces negotiation of the new ciphersuite \texttt{DHE-RSA-CAESAR-SHA256}. It authenticates itself by a self-signed certificate, which I created only for purpose of testing the new cipher suite.
+
+The \texttt{s\_client} command creates a TCP client. It connects to the specified host and port (\texttt{localhost:4444}) and forces negotiation of the new ciphersuite \texttt{DHE-RSA-CAESAR-SHA256}.
+
+In order to verify that my new cipher implementation works as intended, the following criterias must pass:
+
+\begin{itemize}
+  \item no error is thrown \\ An error can be thrown because of various reasons:
+  \begin{itemize}
+    \item the new cipher is not implemented correctly (this was verified in \autoref{toc/implementation-cipher})
+    \item the new cipher suite is not implemented correctly
+  \end{itemize}
+  \item a two-way \textbf{communication channel} between the server and client is established \\ Any data that I enter on server will be sent \textbf{unaltered} to client and vice versa.
+  \item a two-way \textbf{secure communication channel} between the server and client is established \\ Any data that I send via the channel will be sent \textbf{encrypted} during transmission.
+\end{itemize}
+
+I entered a fixed message (\textit{"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\textbackslash{}n"}) to client and I watched it appear on server. The output from server and client reports that it is using the new cipher suite. The communication channel was successfully established.
+
+\inputminted{text}{code/caesar-s_client.txt}
+\inputminted{text}{code/caesar-s_server.txt}
+
+I watched the communication using the Wireshark application, which is capable of monitoring network traffic. It shows the TLS Handshake Protocol (see \autoref{toc/tls-handshake}) messages negotiating the new cipher suite identified by ID \texttt{FF81} and the TLS Data Protocol (see \todo{refit}) messages carrying the encrypted data.
+
+In Wireshark, I logged all communication on local loopback network interface and filtered all TLS communication. See the packet capture \autoref{table/packet-capture}. For the purpose of verifying my implementation, there are following important packets with TLS protocol messages:
+
+\input{tables/packets.tex}
+
+\begin{itemize}
+  \item Packet 4 -- ClientHello
+  \item Packet 6 -- ServerHello
+  \item Packet 7 -- ChangeCipherSpec
+  \item Packet 8 -- ChangeCipherSpec
+  \item Packet 11 -- ApplicationData
+\end{itemize}
+
+When the client initiates the connection, it sends the ClientHello message. It contains client's capabilites. The most important for me is the list of supported cipher suites. There is an unknown cipher suite \textit{"Unknown (0xff81)"}, which represents the new cipher suite.
+
+\inputminted{text}{code/packet-client-hello.txt}
+
+The server receives the ClientHello message, compares the client's capabilities with its own, selects the best connection parameters which are supported by both parties, and sends them back to the client in the ServerHello message. Again, there is an unknown cipher suite \textit{"Unknown (0xff81)"}, which represents the new cipher suite.
+
+\inputminted{text}{code/packet-server-hello.txt}
+
+The client and server now performs a check if the secret communication channel was sucessfully established. They send a ChangeCipherSpec message signalizing that all subsequent communitaion is encrypted by the selected cipher suite and a Finished message containing some data known to both parties. If decryption succeeds, they can start transmitting ApplicationData messages.
+
+There is a single ApplicationData message which doesn't contain any plaintext data. Nobody should be able to decrypt it, because the secret key is exchanged assymetrically by Diffie-Hellman algorithm. I can confirm that it contains my message by comparing plaintext and ciphertext lengths.
+
+\inputminted{text}{code/packet-data.txt}
+
+The plaintext message sent from client to server is 57 bytes long. The ciphertext as observed in packet capture is 73 bytes long. The cipher is an AEAD stream cipher with MAC tag 16 bytes long, thus the ciphertext length should equal the plaintext length + the MAC tag length. $L_{ciphertext} = L_{plaintext} + L_{MAC}$, $73 + 57 + 16$ It confirms that my implementation works as intended.

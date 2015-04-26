@@ -1,0 +1,24 @@
+Frame 6: 1416 bytes on wire (11328 bits), 1416 bytes captured (11328 bits) on interface 0
+Ethernet II, Src: 00:00:00_00:00:00 (00:00:00:00:00:00), Dst: 00:00:00_00:00:00 (00:00:00:00:00:00)
+Internet Protocol Version 4, Src: 127.0.0.1 (127.0.0.1), Dst: 127.0.0.1 (127.0.0.1)
+Transmission Control Protocol, Src Port: 4444 (4444), Dst Port: 35287 (35287), Seq: 1, Ack: 100, Len: 1350
+Secure Sockets Layer
+    TLSv1.2 Record Layer: Handshake Protocol: Server Hello
+        Content Type: Handshake (22)
+        Version: TLS 1.2 (0x0303)
+        Length: 58
+        Handshake Protocol: Server Hello
+            Handshake Type: Server Hello (2)
+            Length: 54
+            Version: TLS 1.2 (0x0303)
+            Random
+            Session ID Length: 0
+            Cipher Suite: Unknown (0xff81)
+            Compression Method: null (0)
+            Extensions Length: 14
+            Extension: renegotiation_info
+            Extension: SessionTicket TLS
+            Extension: Heartbeat
+    TLSv1.2 Record Layer: Handshake Protocol: Certificate
+    TLSv1.2 Record Layer: Handshake Protocol: Server Key Exchange
+    TLSv1.2 Record Layer: Handshake Protocol: Server Hello Done

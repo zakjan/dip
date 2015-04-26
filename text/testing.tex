@@ -1,9 +1,5 @@
 \section{Testing}
 
-\todo{compile a server and a client app with my edited library}
-\todo{configure server to use the new cipher}
-\todo{watch network traffic between them with Wireshark, confirm it is used}
-
 All benchmarks were taken on a computer with the following configuration: CPU Intel Core i5-2540M (AES-NI, AVX capable), RAM 8 GB, OS Linux Fedora 21 (kernel 3.17.7, 64 bit).
 
 openssl list-cipher-commands
@@ -12,8 +8,4 @@ openssl list-cipher-algorithms
 openssl speed
 openssl genrsa 2048 > selfsigned.key
 openssl req -new -x509 -key selfsigned.key -out selfsigned.crt -days 365
-openssl s\_server -accept 4433 -cert selfsigned.crt -key selfsigned.key -cipher 'CAESAR'
-openssl s\_client -connect 127.0.0.1:4433 -CAfile selfsigned.crt
 openssl s\_time
-
-Wireshark "ip.port == 4444" on Loopback interface

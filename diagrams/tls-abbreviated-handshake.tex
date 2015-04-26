@@ -25,7 +25,7 @@
     \path [line] (client5) -- (server5) node[above,near start] {[\textit{ChangeCipherSpec}]};
     \path [line] (client6) -- (server6) node[above,near start] {\textit{Finished}};
     \path [draw] ($(client6b)-(0.5*\nodewidth,0)$) -- ($(server6b)+(0.5*\nodewidth,0)$) node[above,midway] {handshake completed};
-    \path [line,<->] (client7) -- (server7) node[above,midway] {application data};
+    \path [line,<->] (client7) -- (server7) node[above,midway] {\textit{ApplicationData}};
 
     \node [below=0 of table,xshift=-5mm] {
       \begin{tabular}{cl}

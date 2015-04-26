@@ -1,12 +1,11 @@
 \begin{table}
   \centering
-  \csvreader[
-    after head=\begin{tabular}{llll}\toprule\csvlinetotablerow\\\midrule,
-    late after line=\\,
-    late after last line=\\\bottomrule\end{tabular}
-  ]
-    {tables/norx-proposed-instances.csv}{}
-    {\texttt{\csvcoli} & \csvcolii & \csvcoliii & \csvcoliv}
+
+  \begin{tabular}{llll}
+    \csvtable{tables/norx-proposed-instances.csv}
+      {NORX$W$-$R$-$D$ & Nonce ($2W$) & Key ($4W$) & Tag ($4W$)}
+      {\texttt{\csvcoli} & \csvcolii & \csvcoliii & \csvcoliv}
+  \end{tabular}
 
   \caption{NORX proposed instances}
 \end{table}

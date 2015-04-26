@@ -1,5 +1,11 @@
 \begin{table}
   \centering
-  \csvreader[tabular=ccl,myTable={Dec & Hex & Name}]{tables/tls-handshake-message-types.csv}{}{\dec & \texttt{\hex} & \name}
+
+  \begin{tabular}{ccl}
+    \csvtable{tables/tls-handshake-message-types.csv}
+      {Dec & Hex & Name}
+      {\csvcoli & \texttt{\csvcolii} & \csvcoliii}
+  \end{tabular}
+
   \caption{TLS handshake message types}
 \end{table}

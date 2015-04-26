@@ -1,0 +1,15 @@
+apps/openssl s_server -accept 4444 -cert selfsigned.crt -key selfsigned.key -cipher DHE-RSA-CAESAR-SHA256
+
+Using default temp DH parameters
+ACCEPT
+-----BEGIN SSL SESSION PARAMETERS-----
+...
+-----END SSL SESSION PARAMETERS-----
+Shared ciphers:DHE-RSA-CAESAR-SHA256
+CIPHER is DHE-RSA-CAESAR-SHA256
+Secure Renegotiation IS supported
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+DONE
+shutting down SSL
+CONNECTION CLOSED
+ACCEPT

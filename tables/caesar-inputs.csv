@@ -1,5 +1,5 @@
-,required,integrity,confidentiality,single-use
-plaintext,yes,yes,yes,no
-associated data,yes,yes,no,no
-secret message number,no,yes,yes,yes
-public message number,no,yes,no,yes
+;required;integrity;confidentiality;single-use
+plaintext;yes;yes;yes;no
+associated data;yes;yes;no;no
+secret message number;no;yes;yes;yes
+public message number;no;yes;no;yes

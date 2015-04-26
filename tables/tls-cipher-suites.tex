@@ -1,11 +1,9 @@
 \begin{sidewaystable}
-  \csvreader[
-    after head=\begin{tabular}{lllllll}\toprule\csvlinetotablerow\\\midrule,
-    late after line=\\,
-    late after last line=\\\bottomrule\end{tabular}
-  ]
-    {tables/tls-cipher-suites.csv}{}
-    {\texttt{\csvcoli} & \texttt{\csvcolii} & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi & \csvcolvii}
+  \begin{tabular}{lllllll}
+    \csvtable{tables/tls-cipher-suites.csv}
+      {Value & Name & Authentication & Key exchange & Encryption & MAC & PRF}
+      {\texttt{\csvcoli} & \texttt{\csvcolii} & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi & \csvcolvii}
+  \end{tabular}
 
   \todo{Better examples}
   \caption{Example cipher suites and their security properties}

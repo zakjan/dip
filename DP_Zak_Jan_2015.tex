@@ -27,25 +27,30 @@
 \newcommand{\nodewidth}{2.5cm}
 \newcommand{\nodeheight}{0.6cm}
 
-\definecolor{myOrange}{RGB}{255,204,0} % #ffcc00
-
 \usemintedstyle{borland}
-\setminted{breaklines,fontsize=\footnotesize}
-\setminted[c]{linenos}
+\setminted{frame=lines,linenos,fontsize=\footnotesize,breaklines}
 
-\csvset{
-  myTable/.style={separator=semicolon,head to column names,table head=\toprule #1 \\ \midrule,table foot=\bottomrule}
+\newcommand{\yesbf}[1]{
+  \ifthenelse{\equal{#1}{yes}}{\textbf{#1}}{#1}
+}
+\newcommand{\csvtable}[3]{
+  \toprule
+  #2 \\
+  \midrule
+  \csvreader[separator=semicolon,late after line=\\]{#1}{}{#3}
+  \bottomrule
 }
 
 \usetikzlibrary{arrows.meta,calc,decorations.pathreplacing,fit,matrix,positioning}
 \pgfdeclarelayer{bg}
 \pgfsetlayers{bg,main}
+\definecolor{orange}{RGB}{255,204,0} % #ffcc00
 \tikzset{
   >=stealth,
   font=\footnotesize,
   node distance=\nodeheight,
-  rect/.style={draw,fill=myOrange,shape=rectangle,minimum width=\nodewidth,minimum height=\nodeheight,inner sep=1mm,text height=1.5ex,text depth=0.25ex},
-  circle/.style={draw,fill=myOrange,shape=circle,minimum size=\nodeheight,inner sep=0},
+  rect/.style={draw,fill=orange,shape=rectangle,minimum width=\nodewidth,minimum height=\nodeheight,inner sep=1mm,text height=1.5ex,text depth=0.25ex},
+  circle/.style={draw,fill=orange,shape=circle,minimum size=\nodeheight,inner sep=0},
   line/.style={draw,->,very thick,rounded corners},
   struct/.style={matrix,inner sep=0,column sep=-\pgflinewidth},
 }
@@ -77,8 +82,8 @@
 \input{text/caesar.tex}
 \input{text/tls.tex}
 \input{text/openssl.tex}
-\input{text/realisation.tex}
-\input{text/testing.tex}
+\input{text/implementation.tex}
+%\input{text/testing.tex}
 \input{text/result.tex}
 \input{text/bibliography.tex}
 \appendix

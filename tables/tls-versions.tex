@@ -1,5 +1,11 @@
 \begin{table}
   \centering
-  \csvreader[tabular=cccl,myTable={Major & Minor & Hex & Name}]{tables/tls-versions.csv}{}{\major & \minor & \texttt{\hex} & \name}
+
+  \begin{tabular}{cccl}
+    \csvtable{tables/tls-versions.csv}
+      {Major & Minor & Hex & Name}
+      {\csvcoli & \csvcolii & \texttt{\csvcoliii} & \csvcoliv}
+  \end{tabular}
+
   \caption{TLS versions}
 \end{table}

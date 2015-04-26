@@ -1,5 +1,11 @@
 \begin{table}
   \centering
-  \csvreader[tabular=ccll,myTable={Dec & Hex & Name & Level}]{tables/tls-alert-message-types.csv}{}{\dec & \texttt{\hex} & \name & \level}
+
+  \begin{tabular}{ccll}
+    \csvtable{tables/tls-alert-message-types.csv}
+      {Dec & Hex & Name & Level}
+      {\csvcoli & \texttt{\csvcolii} & \csvcoliii & \csvcoliv}
+  \end{tabular}
+
   \caption{TLS alert message types}
 \end{table}
