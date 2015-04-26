@@ -1,4 +1,4 @@
-\chapter{Authenticated Encryption}
+\section{Authenticated encryption}
 
 In previour chapter, we have covered various basic cryptography patterns which help Alice and Bob to communicate securely.
 
@@ -18,7 +18,7 @@ Application designers can benefit from using AE by allowing them to focus on rea
 \end{description}
 
 
-\section{Generic compositions}
+\subsection{Generic compositions}
 
 The simpliest approach to design authenticated encryption schema is to combine a standard symmetric encryption algorithm with a MAC in some way. There are a few possible ways how to do it:
 
@@ -38,7 +38,7 @@ TLS reacts to these results and introduced optional Encrypt-then-MAC support, wh
 
 \input{diagrams/generic-compositions-of-authenticated-encryption.tex}
 
-\section{Authenticated Encryption with Associated Data}
+\subsection{Associated data}
 
 Authenticated Encryption with Associated Data (AEAD) adds the ability to check the integrity and authenticity of some Associated Data (AD), also called Additional Authenticated Data (AAD), that is not encrypted.
 

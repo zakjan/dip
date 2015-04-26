@@ -1,5 +1,35 @@
-\begin{figure}
+\begin{figure}[b]
   \centering
+
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \node (f) [rect,minimum size=1.5*\nodeheight] {$E$};
+      \coordinate (k) at ($(f)+(0,1)$);
+      \coordinate (m) at ($(f)-(1,0)$);
+      \coordinate (c) at ($(f)+(1,0)$);
+      \path [line,->] (k) -- (f) node[at start,above]{$K_e$};
+      \path [line,->] (m) -- (f) node[at start,left]{$m$};
+      \path [line,->] (f) -- (c) node[at end,right]{$c$};
+    \end{tikzpicture}
+    \caption{Encrypt function}
+    \bigskip
+  \end{subfigure}
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \node (f) [rect,minimum size=1.5*\nodeheight] {$D$};
+      \coordinate (k) at ($(f)+(0,1)$);
+      \coordinate (c) at ($(f)-(1,0)$);
+      \coordinate (m) at ($(f)+(1,0)$);
+      \path [line,->] (k) -- (f) node[at start,above]{$K_e$};
+      \path [line,->] (c) -- (f) node[at start,left]{$c$};
+      \path [line,->] (f) -- (m) node[at end,right]{$m$};
+    \end{tikzpicture}
+    \caption{Decrypt function}
+    \bigskip
+  \end{subfigure}
+
   \begin{tikzpicture}
     \node (alice) [rect,left=2.5] {Alice};
     \node [align=center,below=0 of alice] {$E, K_e$ \\ $m, c := E(K_e, m)$};
@@ -7,6 +37,7 @@
     \node [align=center,below=0 of bob] {$D, K_e$ \\ $c, m := D(K_e, c)$};
     \path [line] (alice) -- (bob) node[near start,below]{$c$};
   \end{tikzpicture}
+
   \caption{Generic setting for encryption}
   \label{figure/encryption}
 \end{figure}

@@ -3,36 +3,3 @@
 OpenSSL project is an open-source implementation of a lot of cryptographic algorithms and the SSL/TLS protocol. Today, OpenSSL is the most commonly deployed library for SSL/TLS world-wide, both on the server side and in many client tools. Also the commandline tools provided by OpenSSL are also the most common choice for key and certificate management as well as for testing.
 
 Getting started with OpenSSL is very easy, because OpenSSL is preinstalled on the most of Unix operating systems. There are available precompiled binaries for alll common platforms, including Windows.
-
-\subsubsection{Release schedule}
-
-Because SSL/TLS library is considered as part of critical infrastructure, it is important for developers and vendors to know which versions are supported to receive security fixes in future. Whenever a new version containing fixes for known security flaws is released, in production environment it is recommended to update the library as soon as possible, because not updating could cause dangerous leak of confidential information.
-
-Since OpenSSL 1.0.0, the versioning policy was improved to clearly indicate the level of included changes\footnote{\url{https://www.openssl.org/about/releasestrat.html}}:
-
-\begin{itemize}
-  \item Letter releases, such as 1.0.1\textbf{k}, contain bug and security fixes and no new features.
-  \item Minor releases, such as 1.0.\textbf{2}, usually contain new features, but they doesn't break binary compatibility. Every application compiled with version 1.0.0 can be also compiled with any of future 1.0.x versions and get advantages of new implemented features.
-  \item Major releases, such as 1.\textbf{1}.0, can break binary compatibility.
-\end{itemize}
-
-Also support timelines were updated recently for all current and future releases:
-
-\begin{itemize}
-  \item 0.9.8 and 1.0.0 will be supported until 2015-12-31. Security fixes only will be applied until then.
-  \item 1.0.1 will be supported until 2016-12-31.
-  \item 1.0.2 will be supported at least until 2016-12-31.
-  \item Every future releases will be supported at least for two years, a LTS release will be supported at least for five years.
-\end{itemize}
-
-Version 1.1.0 will break binary compatibility because a major cleanup is necessary. A lot of recently found security bugs were caused by excessive complexity of the source code. The preview version is expected to be available in the middle of 2015 and to be released in the end of 2015.
-
-\subsubsection{Structure}
-
-\todo{Trochu hlubší popis OpenSSL}
-
-Coding style \url{https://www.openssl.org/about/codingstyle.txt}
-
-OpenSSL provides two libraries, \texttt{libssl} and \texttt{libcrypto}. \texttt{libssl} is responsible for SSL/TLS protocol, also with other supportive functions such as parsing and validating X509 certificates.
-
-\subsubsection{EVP}

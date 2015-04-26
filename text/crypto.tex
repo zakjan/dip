@@ -12,11 +12,14 @@ While the cipher is publicly known, the secret key still needs to be exchanged v
 \section{Encryption}
 \label{toc/encryption}
 
+\input{diagrams/encryption-problem.tex}
+\input{diagrams/encryption.tex}
+
 Encryption is the original goal of cryptography. It is the process of encoding messages in such a way that only authorized parties can read it. Encryption does not of itself prevent interception, but denies the message content to the interceptor.
 
 The generic use case is: Alice and Bob\footnote{Alice, Bob and Eve are placeholder names commonly used when discussing cryptography, to identify an archetypal role of participant. Alice is a sender, Bob is a receiver and Eve is an eavesdropper. For the first time these names were used in Ron Rivest's paper introducing RSA public key cryptosystem. \cite{rsa} Since then, a number of other names have entered cryptographic literature, such as Malory for malicious active attacker.} want to communicate with each other. However, communication channels are assumed not to be secure. Eve is eavesdropping on the channel. Any message that Alice sends to Bob is also received by Eve. (The same applies for messages sent from Bob to Alice, but it is the same problem and the same solution will work for Bob's messages, so we concentrate to Alice messages.) How can Alice and Bob communicate without learning everything? (\autoref{figure/encryption-problem}) \cite[p.~23]{ferguson2010cryptography}
 
-To prevent Eve from understanding the conversation, Alice and Bob want to use encryption. They first need to agree on a set of \textit{encrypt} and \textit{decrypt} function $E, D$ as in \autoref{figure/encrypt-and-decrypt-functions} (a cipher) and a secret encryption \textit{key} $K_e$. Then they can use encryption in their communication channel in \autoref{figure/encryption}.
+To prevent Eve from understanding the conversation, Alice and Bob want to use encryption. They first need to agree on a set of \textit{encrypt} and \textit{decrypt} function $E, D$ (a cipher) and a secret encryption \textit{key} $K_e$. Then they can use encryption in their communication channel in \autoref{figure/encryption}.
 
 So Alice wants to send a \textit{plaintext} message $m$. She first encrypts it using the encrypt function $E(K_e, m)$ to get a \textit{ciphertext} message $c$. It can be sent over the communication channel, because only Alice and Bob know how to decrypt it. When Bob receives the ciphertext, he can decrypt it using the decrypt function $D(K_e, c)$ to get the original plaintext $m$ that Alice wanted to send to him.
 
@@ -24,16 +27,15 @@ Now Eve tries to listen to the message, but she receives only ciphertext message
 
 Example algorithms: RC4, DES, AES
 
-\input{diagrams/encryption-problem.tex}
-\input{diagrams/encrypt-and-decrypt-functions.tex}
-\input{diagrams/encryption.tex}
+\section{Message authentication}
+\label{toc/message-authentication}
 
-\section{Authentication}
-\label{toc/authentication}
+\input{diagrams/authentication-problem.tex}
+\input{diagrams/authentication.tex}
 
 Alice and Bob have another problem, as shown in \autoref{figure/authentication-problem}. If Eve has a bit more control over the communication channel, she can not only passively listen to messages, she can also actively interfere.
 
-To prevent Eve from undetectably modifying or forging messages, Alice and Bob want to use authentication. They first need to agree on a set of \textit{sign} and \textit{verify} functions $S, V$ as in \autoref{figure/sign-and-verify-functions} (usually the verify function simply uses the sign function and compares its results) and a authentication key $K_a$ (different from encryption key $K_e$). Then they can use authentication their communication channel in \autoref{figure/authentication}.
+To prevent Eve from undetectably modifying or forging messages, Alice and Bob want to use authentication. They first need to agree on a set of \textit{sign} and \textit{verify} functions $S, V$ (usually the verify function simply uses the sign function and compares its results) and a authentication key $K_a$ (different from encryption key $K_e$). Then they can use authentication their communication channel in \autoref{figure/authentication}.
 
 So Alice wants to send a message $m$. She first computes a signature $a$ using the sign function $S(K_a, m)$. This signature is also called Message Authentication Code (MAC). The message along with its signature can be sent over the communication channel, because only Alice and Bob know how to generate the signature. When Bob receives the message, he verifies the signature using the verify function $V(K_a, m, a)$, if it passes, he can be sure that Alice sent the message.
 
@@ -47,48 +49,32 @@ Authentication with sequential message numbering solves most of the problem. Eve
 
 Example algorithms: HMAC-MD5, HMAC-SHA1, HMAC-SHA256
 
-\input{diagrams/authentication-problem.tex}
-\input{diagrams/sign-and-verify-functions.tex}
-\input{diagrams/authentication.tex}
+\section{Asymmetric cryptography}
 
-\section{Asymmetric key exchange}
+Symmetric cryptographic primitives share a huge disadvantage. They rely on the existence of a shared secret value by Alice and Bob, which is used as a key to those algorithms. Without it, they don't work.
 
-There is a huge disadvantage of encryption and authentication as discussed in \autoref{toc/encryption} and \autoref{toc/authentication}. Alice and Bob needs to share the key prior their communication starts, using a different, secure channel. Alice can't just sent the key to Bob over the same channel, as Eve could read it too.
+The secret value must be exchanged via a different, more secure communication channel, such as by handing it over in person, or by cellphone. We can't simply send the secret value in plaintext over the same channel as the message, which the secret value is protecting, because Eve could see it and use it to read or manipulate the protected content. If it would be safe to send the secret value via the channel, then it is useless to bother with encryption or authentication at all.
 
-Alice and Bob could have exchanged the key when they call themselves by a phone, or meet in person. Nevertheless, those channels can still be insecure or hard to maintain. It depends on Eve what capabilities to eavesdrop or modify them. In current modern age with pretty common high-budget surveilance, nobody can be sure about his digital privacy.
+The problem of key distribution is often solved by technique called \textit{One-Time Pad} (OTP). Alice and Eve can meet in person and exchange a lot of random values. Later when they are separated and they need to communicate securely, they just choose a single random value they exchanged before, eg. by its ID, and use it to secure further communication. After the communication ends, they won't use it again to prevent attacks which can take advantage from using the same key.
 
-Distributing cryptographic keys is an old-age problem, and the solution lies in asymetric cryptography. It means that
+OTPs provide the most secure way to communicate securely, however it is very resource-consuming to exchange secret values this way. Thus an easier method is necessary to establish a secure communication channel. The solution lies in the modern field of asymmetric cryptography.
 
 By using a well-designed key exchange cryptosystem, Alice and Bob can establish a shared secret value, without sending it over an insecure channel. In short, they agree on common parameters, which they use for generating their secret values. Then they transform them to a public parameters, they exchange them, and using their own secret value, and the value from the opposite party, they can compute the shared secred value. If thecomputed value is kept secret, Alice and Bob can use it as a key for all crypto algorithms that needs a shared key. Eve can listen to key exchange parameters, but she can't compute the same value, because she doesn't know their secret exchange parameters.
 
-\todo{example}
-
 Example algorithms: Diffie-Hellman, ElGamal
 
-\todo{image}
+Asymmetric cryptography offers cryptographic primitives for encryption and message authentication as well, but these topics are out of scope of this thesis.
 
-\section{Asymmetric encryption}
+% \input{diagrams/asymmetric-encrypt-and-decrypt-functions.tex}
+% \input{diagrams/asymmetric-encryption.tex}
 
-Asymmetric encryption can be also used for key exchange
-
-\todo{text}
-
-\autoref{figure/asymmetric-encryption}
-
-\input{diagrams/asymmetric-encrypt-and-decrypt-functions.tex}
-\input{diagrams/asymmetric-encryption.tex}
-
-\section{Asymmetric authentication}
-
-\todo{text}
-
-\autoref{figure/asymmetric-authentication}
-
-\input{diagrams/asymmetric-sign-and-verify-functions.tex}
-\input{diagrams/asymmetric-authentication.tex}
+% \input{diagrams/asymmetric-sign-and-verify-functions.tex}
+% \input{diagrams/asymmetric-authentication.tex}
 
 \section{Secure communication channel}
 
 \todo{why symmetric encryption instead of asymmetric}
 
 \todo{text}
+
+\input{text/aead.tex}
