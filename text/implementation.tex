@@ -1,6 +1,6 @@
 \chapter{Implementing a new TLS cipher suite in OpenSSL}
 
-All CAESAR candidates publish its encrypt/decrypt primitives through the same CAESAR API, see \autoref{toc/caesar-c-api}. I decided to implement a generic TLS cipher suite into OpenSSL in such way, that any CAESAR candidate can be used in the new cipher suite.
+All CAESAR candidates publish its encrypt/decrypt primitives through the same CAESAR API, see \autoref{toc/caesar-api}. I decided to implement a generic TLS cipher suite into OpenSSL in such way, that any CAESAR candidate can be used in the new cipher suite.
 
 This chapter documents my source code added to OpenSSL 1.0.2. Basically I implemented a bridge between OpenSSL EVP API and CAESAR API. I can compile my customized OpenSSL with any CAESAR cipher, and it works. For my testing purposes, I chose the NORX cipher, see \autoref{toc/caesar-norx}.
 
@@ -51,6 +51,10 @@ Finally I registered the new cipher in \texttt{crypto/evp/c\_allc.c} file. From 
 \inputminted{c}{code/openssl/crypto/evp/c_allc.c}
 
 \subsection{Testing}
+
+First I checked if the new cipher is registered properly in OpenSSL.
+
+\inputminted{text}{code/caesar-list-cipher-algorithms.txt}
 
 I created a simple Shell script to test my new cipher. It uses a fixed sample plaintext, and it generates a random key and IV.
 

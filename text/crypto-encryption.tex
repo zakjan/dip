@@ -1,0 +1,17 @@
+\section{Encryption}
+\label{toc/encryption}
+
+\input{diagrams/encryption-problem.tex}
+\input{diagrams/encryption.tex}
+
+Encryption is the original goal of cryptography. It is the process of encoding messages in such a way that only authorized parties can read it. Encryption does not of itself prevent interception, but denies the message content to the interceptor.
+
+The generic use case is: Alice and Bob\footnote{Alice, Bob and Eve are placeholder names commonly used when discussing cryptography, to identify an archetypal role of participant. Alice is a sender, Bob is a receiver and Eve is an eavesdropper. For the first time these names were used in Ron Rivest's paper introducing RSA public key cryptosystem. \cite{rsa} Since then, a number of other names have entered cryptographic literature, such as Malory for malicious active attacker.} want to communicate with each other. However, communication channels are assumed not to be secure. Eve is eavesdropping on the channel. Any message that Alice sends to Bob is also received by Eve. (The same applies for messages sent from Bob to Alice, but it is the same problem and the same solution will work for Bob's messages, so we concentrate to Alice messages.) How can Alice and Bob communicate without learning everything? (\autoref{figure/encryption-problem}) \cite[p.~23]{ferguson2010cryptography}
+
+To prevent Eve from understanding the conversation, Alice and Bob want to use encryption. They first need to agree on a set of \textit{encrypt} and \textit{decrypt} function $E, D$ (a cipher) and a secret encryption \textit{key} $K_e$. Then they can use encryption in their communication channel in \autoref{figure/encryption}.
+
+So Alice wants to send a \textit{plaintext} message $m$. She first encrypts it using the encrypt function $E(K_e, m)$ to get a \textit{ciphertext} message $c$. It can be sent over the communication channel, because only Alice and Bob know how to decrypt it. When Bob receives the ciphertext, he can decrypt it using the decrypt function $D(K_e, c)$ to get the original plaintext $m$ that Alice wanted to send to him.
+
+Now Eve tries to listen to the message, but she receives only ciphertext message $c$. If we assume she doesn't know the encryption key $K_e$, she can't decrypt it.
+
+Example algorithms: RC4, DES, AES

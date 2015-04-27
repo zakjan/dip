@@ -1,0 +1,16 @@
+\section{Key exchange}
+\label{toc/key-exchange}
+
+Symmetric cryptographic primitives share a huge disadvantage. They rely on the existence of a shared secret value by Alice and Bob, which is used as a key to those algorithms. Without it, they don't work.
+
+The secret value must be exchanged via a different, more secure communication channel, such as by handing it over in person, by public post service, or by cellphone. We can't simply send the secret value in plaintext over the same channel as the message, which the secret value is protecting, because Eve could see it and use it to read or manipulate the protected content. If it would be safe to send the secret value via the channel, then it is useless to bother with encryption or authentication at all.
+
+The problem of key distribution is often solved by technique called \textit{One-Time Pad} (OTP). Alice and Eve can meet in person and exchange a lot of random values. Later when they are separated and they need to communicate securely, they just choose a single random value they exchanged before, eg. by its ID, and use it to secure further communication. After the communication ends, they won't use it again to prevent attacks which can take advantage from using the same key.
+
+OTPs provide the most secure way to communicate securely, however it is very resource-consuming to exchange secret values this way. Thus an easier method is necessary to establish a secure communication channel. The solution lies in the modern field of asymmetric cryptography.
+
+By using a well-designed key exchange cryptosystem, Alice and Bob can establish a shared secret value, without sending it over an insecure channel. In short, they agree on common parameters, which they use for generating their secret values. Then they transform them to a public parameters, they exchange them, and using their own secret value, and the value from the opposite party, they can compute the shared secred value. If thecomputed value is kept secret, Alice and Bob can use it as a key for all crypto algorithms that needs a shared key. Eve can listen to key exchange parameters, but she can't compute the same value, because she doesn't know their secret exchange parameters.
+
+Example algorithms: Diffie-Hellman, ElGamal
+
+Asymmetric cryptography offers cryptographic primitives for encryption and message authentication as well, but these topics are out of scope of this thesis.

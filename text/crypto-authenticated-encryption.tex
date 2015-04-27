@@ -1,8 +1,6 @@
 \section{Authenticated encryption}
 
-In previour chapter, we have covered various basic cryptography patterns which help Alice and Bob to communicate securely.
-
-Many applications desires to achieve both confidentiality and integrity goals by using some combination of encryption and authentication algorithm, with each algorithm using an independent key. However, securely combining them together is difficult, because it could lead to incorrect, error-prone combination.
+Many applications desires to achieve both confidentiality and integrity goals by using some combination of encryption and authentication algorithm. However, securely combining them together is difficult, because it could lead to incorrect, error-prone combination.
 
 There are a few researched combinations of encryption and authentication, called Generic compositions: Encrypt-and-MAC (E\&M), Encrypt-then-MAC (EtM), MAC-then-Encrypt (MtE). These combinations are successfully used in real-world software.
 
@@ -20,6 +18,8 @@ Application designers can benefit from using AE by allowing them to focus on rea
 
 \subsection{Generic compositions}
 
+\input{diagrams/generic-compositions-of-authenticated-encryption.tex}
+
 The simpliest approach to design authenticated encryption schema is to combine a standard symmetric encryption algorithm with a MAC in some way. There are a few possible ways how to do it:
 
 \begin{description}
@@ -28,15 +28,13 @@ The simpliest approach to design authenticated encryption schema is to combine a
   \item[MAC-then-Encrypt] A MAC is computed from the plaintext, then the plaintext and MAC are encrypted together to ciphertext. The ciphertext (containing encrypted plaintext and plaintext's MAC) is sent.
 \end{description}
 
-See \autoref{figure/generic-compositions-of-authenticated-encryption} for clear comparison of them.
+See \autoref{figure/generic-compositions-of-authenticated-encryption} for comparison.
 
 All of them are used in real-world software - Encrypt-and-MAC in SSH, Encrypt-then-MAC in IPSec and MAC-then-Encrypt in TLS.
 
 However, recent research shows that only Encrypt-then-MAC schema is provably secure. \cite{generic-ae} \cite{generic-ae2}
 
 TLS reacts to these results and introduced optional Encrypt-then-MAC support, which can be negotiated by a specific a TLS extension as defined in RFC 7366\footnote{\url{https://tools.ietf.org/html/rfc7366}}.
-
-\input{diagrams/generic-compositions-of-authenticated-encryption.tex}
 
 \subsection{Associated data}
 

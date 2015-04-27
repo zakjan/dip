@@ -1,0 +1,21 @@
+\section{Message authentication}
+\label{toc/message-authentication}
+
+\input{diagrams/authentication-problem.tex}
+\input{diagrams/authentication.tex}
+
+Alice and Bob have another problem, as shown in \autoref{figure/authentication-problem}. If Eve has a bit more control over the communication channel, she can not only passively listen to messages, she can also actively interfere.
+
+To prevent Eve from undetectably modifying or forging messages, Alice and Bob want to use authentication. They first need to agree on a set of \textit{sign} and \textit{verify} functions $S, V$ (usually the verify function simply uses the sign function and compares its results) and a authentication key $K_a$ (different from encryption key $K_e$). Then they can use authentication their communication channel in \autoref{figure/authentication}.
+
+So Alice wants to send a message $m$. She first computes a signature $a$ using the sign function $S(K_a, m)$. This signature is also called \textit{Message Authentication Code} (MAC). The message along with its signature can be sent over the communication channel, because only Alice and Bob know how to generate the signature. When Bob receives the message, he verifies the signature using the verify function $V(K_a, m, a)$, if it passes, he can be sure that Alice sent the message.
+
+Now Eve tries to modify the message $m$ to a different message $m'$. If we assume that she doesn't know the authentication key $K_a$, she can only replace $m$ with $m'$. Bob will try to verify it, but it fails, so Bob will recognize that the message is not correct and he will discard it.
+
+Pure authentication is only a partial solution. Eve can still do a lot of other malicious actions. Imagine Alice sending to Bob a messages containing requests for bank transfer. Eve can record a message and then send it to Bob later again (replay it), reorder messages, or completely delete messages. Therefore, authentication is almost always combined with a message numbering scheme. If a message $m$ contains such a message number, Bob is not fooled by Eve when she replays old messages. Bob will simply see that the message has correct signature, but the message number is from an old message, so he will discard it.
+
+The best scheme of message numbering is a number sequence, incrementing by 1 for each message. Bob will accept only messages which passes the verification step and whose message number is strictly greater than the message number of the last message he accepted. So Bob receives a subsequence of messages of that Alice sent. A subsequence is simply the same sequence with growing message numbers with zero or more messages deleted.
+
+Authentication with sequential message numbering solves most of the problem. Eve can still stop Alice and Bob from communicating by deleting or delaying messages. But that is all she can do. Alice and Bob can prevent the loss of information by using a scheme of resending messages that were lost, but that is more application-specific problem, and not part of cryptography.
+
+Example algorithms: HMAC-MD5, HMAC-SHA1, HMAC-SHA256
