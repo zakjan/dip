@@ -12,7 +12,6 @@
 * TLS
     * historie
     * stavový automat
-    * zdůraznit použití na internetu
     * ChangeCipherSpec, Alert, Data Protocol
     * výčet a stručný popis crypto knihoven (OpenSSL, NSS, SChannel, ...)
     * proč jsem si vybral OpenSSL
