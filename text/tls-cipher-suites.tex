@@ -17,20 +17,18 @@ A cipher suite is defined by the following attributes:
   \item Pseudorandom function
 \end{itemize}
 
-Cipher suite names are usually long, descriptive and consistent. They are made from names of underlying used algorithms.
+Cipher suite names are usually long, descriptive and consistent. They are made from names of underlying used algorithms. See \autoref{figure/cipher-suites} for sample common cipher suites.
 
 \subsection{Key exchange}
 
-Key exchange as defined in \autoref{toc/key-exchange} is used in TLS to establish a shared value called \textit{premaster secret}. The length of premaster secret depends on the key exchange algorithm. From the premaster secret is constructed a 48-byte shared value called \textit{master secret}, a value which is used in all subsequent operations affecting the security of the session.
+Key exchange as introduced in \autoref{toc/key-exchange} is used in TLS to establish a shared value called \textit{premaster secret}. The structure of premaster secret depends on the key exchange algorithm. From the premaster secret is constructed a 48-byte shared value called \textit{master secret}, a value which is used in all subsequent operations affecting the security of the session.
 
 Which key exchange is used depends on the negotiated suite. Once the suite is known, both sides know which algorithm to follow. In practice, there are four main key exchange algorithms:
 
 \begin{description}
-  \item[RSA] RSA is effectively the standard key exchange algorithm. It's universally supported but suffers from one serious problem: its design allows a passive attacker to decrypt all encrypted data, provided she has access to the server's private key. Because of this, the RSA key exchange is being slowly replaced with other algorithms, those that support forward secrecy. The RSA key exchange is a key transport algorithm; the client generates the premaster secret and transports it to the server, encrypted with the server's
-public key.
-  \item[DHE] Ephemeral Diffie-Hellman (DHE) key exchange is a well-established algorithm. It's liked because it provides forward secrecy but disliked because it's slow. DHE is a key agreement algorithm; the negotiating parties both contribute to the process and agree
-on a common key. In TLS, DHE is commonly used with RSA authentication.
-  \item[ECDHE] Ephemeral elliptic curve Diffie-Hellman (ECDHE) key exchange is based on elliptic curve cryptography, which is relatively new. It's liked because it's fast and provides forward secrecy. It's well supported only by modern clients. ECDHE is a key agreement algorithm conceptually similar to DHE. In TLS, ECDHE can be used with either RSA or ECDSA authentication. \cite{ristic2014bulletproof}
+  \item[RSA] RSA is effectively the standard key exchange and authentication algorithm. More specifically, it is a key transport algorithm -- the client generates the premaster secret and transports it to the server, encrypted with the server's public key. It is universally supported but suffers from one serious problem. Its design allows a passive attacker to decrypt all encrypted data, provided she has access to the server's private key. Because of this, the RSA key exchange is being slowly replaced with other algorithms, those that support so called \textit{forward secrecy}.
+  \item[DHE] Ephemeral Diffie-Hellman (DHE) key exchange is a well-established algorithm. More specifically, it is a key agreement algorithm -- the negotiating parties both contribute to the process and agree on a common key. It is liked because it provides forward secrecy but disliked because it's slow. In TLS, DHE is commonly used with RSA authentication.
+  \item[ECDHE] Ephemeral Elliptic Curve Diffie-Hellman (ECDHE) key exchange is based on elliptic curve cryptography, which is relatively new. Conceptually it is a key exchange algorithm similar to DHE. It's liked because it's fast and provides forward secrecy. It's well supported only by modern clients. In TLS, ECDHE can be used with either RSA or ECDSA authentication. \cite{ristic2014bulletproof}
 \end{description}
 
 \subsection{Authentication}
@@ -41,8 +39,14 @@ During the RSA key exchange, the client generates a random value as the premaste
 
 During the DHE and ECDHE exchanges, the server contribute to the key exchange with its random parameters, signed with its private key. The client can validate it by the corresponding public key.
 
-\subsection{Encryption}
+Do not confuse authentication with message authentication. Asymmetric authentication is used during handshake, while message authentication is used during application data transfer.
 
-\subsection{Message authentication code}
+\subsection{Encryption and message authenticaion}
+
+TLS can encrypt data (as introduced in \autoref{toc/encryption}) using a variety of ways, using ciphers such as 3DES, RC4, AES or CAMELLIA. AES is by far the most popular cipher.
+
+Integrity validation (as introduced in \autoref{toc/message-authentication}) is part of the encryption process using an authenticated encryption scheme (as introduced in \autoref{toc/authenticated-encryption}). It is handled either explicitly at the protocol level using a Mac-then-Encrypt generic composition scheme or implicitly by the negotiated AEAD cipher.
+
+The MAC tag is computed from plaintext and additional data, such as TLS record header, to ensure that unencrypted data in the header can't be tampered with, and TLS record sequence number, to ensure that the messages can't be replayed.
 
 \subsection{Pseudorandom function}
