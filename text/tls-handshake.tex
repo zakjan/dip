@@ -19,7 +19,8 @@ This phase usually takes 6-13 messages in 3-4 network flights, depending on whic
   \item abbreviated handshake that resumes an earlier session
 \end{itemize}
 
-\subsubsection{Full and basic handshake}
+\input{figures/tls-full-handshake.tex}
+\input{figures/tls-abbreviated-handshake.tex}
 
 If a client and server hasn't previously communicated with each other, both parties will perform a full or basic handshake in order to establish a session. See \autoref{figures/tls-full-handshake}.
 
@@ -27,9 +28,7 @@ Full handshake requires client authentication, whereas basic handshake does not.
 
 A full handshake is completed after 4 network flights before the handshake is complete and protocol parties can begin to send application data. Thus, using TLS adds a latency penalty of 2 RTTs if the client sends application data first, such as in HTTP protocol.
 
-An abbreviated handshake is completed after 3 network flights, thus adding a latency penalty of just 1 RRT if the client sends application data first.
-
-\input{diagrams/tls-full-handshake.tex}
+An abbreviated handshake is completed after 3 network flights, thus adding a latency penalty of just 1 RRT if the client sends application data first. The session reuses previously exchanged secret values between the client and server, identified by either \textit{Session Tickets} or \textit{Session Cookies}.
 
 \begin{enumerate}
   \item \textit{ClientHello} - client initiates a handshake, sends its capabilities to server
@@ -47,11 +46,3 @@ An abbreviated handshake is completed after 3 network flights, thus adding a lat
   \item \textit{Finished} - server sends a MAC of the handshake messages it sent and received
   \item handshake is completed, secure communication channel is established, both parties can securely send application data
 \end{enumerate}
-
-\subsubsection{Abbreviated handshake}
-
-An abbreviated handshake is complete after 3 flights, thus adding just 1 RRT latency if the client sends application data first.
-
-\input{diagrams/tls-abbreviated-handshake.tex}
-
-\todo{ref appendix}

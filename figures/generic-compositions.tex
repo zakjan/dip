@@ -1,6 +1,6 @@
 \begin{figure}
   \centering
-  \begin{subfigure}[b]{0.3\textwidth}
+  \begin{minipage}[b]{0.3\textwidth}
     \centering
     \begin{tikzpicture}[remember picture]
       \node (row1) [struct] {
@@ -12,9 +12,9 @@
       \path [line] (plaintext) -- (ciphertext);
       \path [line] (plaintext) -- (mac);
     \end{tikzpicture}
-    \caption{Encrypt-and-MAC}
-  \end{subfigure}
-  \begin{subfigure}[b]{0.3\textwidth}
+    \subcaption{Encrypt-and-MAC}
+  \end{minipage}%
+  \begin{minipage}[b]{0.33\textwidth}
     \centering
     \begin{tikzpicture}
       \node (row1) [struct] {
@@ -30,9 +30,9 @@
       \path [line,color=Gray] (ciphertext) -- (ciphertext2);
       \path [line] (ciphertext) -- (mac);
     \end{tikzpicture}
-    \caption{Encrypt-then-MAC}
-  \end{subfigure}
-  \begin{subfigure}[b]{0.3\textwidth}
+    \subcaption{Encrypt-then-MAC}
+  \end{minipage}%
+  \begin{minipage}[b]{0.33\textwidth}
     \centering
     \begin{tikzpicture}
       \node (row1) [struct] {
@@ -48,8 +48,8 @@
       \path [line] (plaintext) -- (mac);
       \path [line] (row2) -- (ciphertext);
     \end{tikzpicture}
-    \caption{MAC-then-encrypt}
-  \end{subfigure}
+    \subcaption{MAC-then-encrypt}
+  \end{minipage}
   \caption{Generic compositions of authenticated encryption}
   \label{figure/generic-compositions-of-authenticated-encryption}
 \end{figure}

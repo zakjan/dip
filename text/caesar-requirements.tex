@@ -1,0 +1,68 @@
+\section{Requirements}
+
+\subsection{Functional requirements}
+
+For the purpose of CAESAR competition, an \textit{authenticated cipher} is a pair of encrypt and decrypt functions, meeting the following specific requirements.
+
+All inputs and outputs should be represented as opaque byte-strings (members of a set $\mathbb{Z}_{2^8}^*$), because they benefit from direct support of current computers to store and transmit them.
+
+A cipher is permitted to be defined using objects other then byte-strings, nevertheless it must specify an unambiguous relationship between those objects and byte-strings (e.g. endianness of integers).
+
+A cipher must specify a length of all fixed-length inputs. It is permitted to specify a maximum length of various-length inputs, but this limit must not be smaller than 65 kB and submissions are expected to include justification for any maximum length limits.
+
+No other restrictions on their structure should be imposed, all inputs meeting the length restrictions must be accepted.
+
+\subsubsection{Inputs and outputs}
+
+\input{tables/caesar-inputs.tex}
+
+A \textit{plaintext} is a variable-length input/output, a piece of confidential information a sender wants to transmit to a receiver, as introduced in \autoref{toc/encryption}.
+
+A \textit{ciphertext} is a variable-length input/output counterpart of the plaintext, that can be transmitted over an insecure channel. it is usually longer then the plaintext, because it contains an \textit{authentication tag}. This length difference is permitted to be fixed constant, thus leaking the plaintext length via the ciphertext length. Designers are advised that minimizing ciphertext length is generally considered more valuable than hiding plaintext length.
+
+A \textit{key} is a fixed-length input, which determines the output of both encrypt and decrypt functions. The key must be shared between both communicating parties prior to encrypted communication. Without a key or with a different one then used in the encrypt function, the decrypt function produces no useful result. This follows the Kerckhoffs' principle as introduced in \autoref{toc/kerckhoffs-principle}.
+
+An \textit{associated data} is a variable-length input, a piece of information known by both communicating parties, which doesn't need to meet confidentiality requirement. However, its origin still needs to be verified by the receiving party. It can be for example some message metadata, such as version of used protocol.
+
+A \textit{nonce} (number used once) is a fixed-length input. It is a public value, which which is usually used as IV for the enclosed cipher. Such IVs should be unique for each encryption run, so it makes all ciphertexts undistinguishable even if the same key, message and associated data is used.
+
+However, CAESAR call for submissions requests an unusual authenticated encryption interface. The user, who wants to encrypt, instead of providing the usual \textit{four} arguments (the key, nonce, associated data, and message) for authenticated encryption, he needs to provide \textit{five} arguments. The nonce has been transformed into a \textit{public message number} and \textit{secret message number}. \cite{cryptoeprint:2013:242}
+
+A \textit{public message number} is a fixed-length input. It is a public value with the same requirements as the nonce in the original definition of authenticated encryption.
+
+A \textit{secret message number} is a fixed-length input. It is a secret value, recoverable from the ciphertext, however it is not a part of the plaintext. Allowing both a secret message number and a public message number creates possibilities of different levels of their security requirements.
+
+All inputs must meet various security purposes, as indicated by \autoref{table/caesar-inputs}.
+
+
+\subsection{Software requirements}
+\label{toc/caesar-api}
+
+Each first-round submission must contain a portable reference software implementation to support public understanding of the cipher, cryptanalysis, verification of subsequent implementations, etc. The implementation must cover all recommended parameter sets, and must compute exactly the function specified in the submission. The reference implementation is expected to be optimized for clarity, not for performance. \cite{crypto-competitions}
+
+The submission must export the following constants:
+
+\begin{itemize}
+  \item \texttt{CRYPTO\_KEYBYTES} -- the fixed length of key
+  \item \texttt{CRYPTO\_NSECBYTES} -- the fixed length of secret message number (0 if not supported)
+  \item \texttt{CRYPTO\_NPUBBYTES} -- the fixed length of public message number (0 if not supported)
+  \item \texttt{CRYPTO\_ABYTES} -- the maximum (usually fixed) length difference between plaintext and ciphertext
+\end{itemize}
+
+\inputminted{c}{code/caesar/constants.c}
+
+The submission must export the following \texttt{crypto\_aead\_encrypt} and \texttt{crypto\_aead\_decrypt} functions, which perform the encrypt and decrypt operation respectively.
+
+\inputminted{c}{code/caesar/encrypt.c}
+\inputminted{c}{code/caesar/decrypt.c}
+
+The output of functions must be determined entirely by the inputs in their arguments and must not be affected by any randomness or other hidden inputs.
+
+The functions should perform the operation in constant time with regard to any input data (even invalid data) to prevent timing side-channel attacks.
+
+The decrypt function must return -1 if the ciphertext is not valid, i.e. if the ciphertext does not equal the encryption of any (plaintext, secret message number) pair with this associated data, public message number, and secret key. The functions may return other negative numbers to indicate other failures, for example memory-allocation failures. \cite{crypto-competitions}
+
+
+\subsection{Hardware requirements}
+
+Each submission selected for the second round will also be required to include a reference hardware design (i.e., a reference implementation in the VHDL or Verilog languages). Details of the hardware API have not yet been specified. \cite{crypto-competitions}
