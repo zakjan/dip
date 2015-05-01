@@ -1,23 +1,12 @@
-\section{What is TLS?}
+\section{Goals}
 
-\edit{TLS is a security protocol used in almost 100\% of secure Internet transactions. Essentially, TLS transforms a typical reliable transport protocol (such as TCP) into a secure communication channel suitable for sending sensitive messages.}
-
-
-\edit{TLS does not indicate which cryptographic algorithms need to be used. Instead of it, TLS serves as a framework establishing and maintaining a secure comminucation channel.}
-
-\url{http://ftp1.digi.com/support/documentation/0200054_d.pdf}
-
-Security is not the only goal of TLS. It actually has four main goals, listed here in the order of priority:
+TLS has four main goals, listed here in the order of priority:
 
 \begin{description}
-  \item[Cryptographic security]
-    This is the main issue: enable secure communication between any two parties who wish to exchange information.
-  \item[Interoperability]
-    Independent programmers should be able to develop programs and libraries that are able to communicate with one another using common cryptographic parameters.
-  \item[Extensibility]
-    TLS is effectively a framework for the development and deployment of cryptographic protocols. Its important goal is to be independent of the actual cryptographic primitives (e.g., ciphers and hashing functions) used, allowing migration from one primitive to another without needing to create new protocols.
-  \item[Efficiency]
-    The final goal is to achieve all of the previous goals at an acceptable performance costreducing costly cryptographic operations down to the minimum and providing a session caching scheme to avoid them on subsequent connections. \cite[p.~2]{ristic2014bulletproof}
+  \item[Cryptographic security] This is the main issue: enable secure communication between any two parties who wish to exchange information.
+  \item[Interoperability] Independent programmers should be able to develop programs and libraries that are able to communicate with one another using common cryptographic parameters.
+  \item[Extensibility] TLS is effectively a framework for the development and deployment of cryptographic protocols. Its important goal is to be independent of the actual cryptographic primitives (e.g., ciphers and hashing functions) used, allowing migration from one primitive to another without needing to create new protocols.
+  \item[Efficiency] The final goal is to achieve all of the previous goals at an acceptable performance costreducing costly cryptographic operations down to the minimum and providing a session caching scheme to avoid them on subsequent connections. \cite[p.~2]{ristic2014bulletproof}
 \end{description}
 
 Whereas TLS provides security over reliable TLS communication, there also exists its variant, DTLS protocol. DTLS is deliberately designed to be as similar to TLS as possible, both to minimize new security invention and to maximize the amount of code and infrastructure reuse.\cite[p.~4]{rfc6347} This thesis is about TLS only.

@@ -1,0 +1,35 @@
+\begin{figure}[t]
+  \centering
+
+  \begin{tikzpicture}
+    \node (table) [matrix,row sep=\nodeheight,column sep=\nodewidth] {
+      \node {\url{http://google.com}}; & \node {\url{https://google.com}}; \\
+      \node (table-layer1) [rect] {HTTP}; & \node (table2-layer1) [rect] {HTTPS}; \\
+      & \node (table2-layer2a) [rect] {TLS}; \\
+      \node (table-layer2) [rect] {TCP}; & \node (table2-layer2b) [rect] {TCP}; \\
+      \node (table-layer3) [rect] {IP}; & \node (table2-layer3) [rect] {IP}; \\
+      \node (table-layer4) [rect] {Ethernet}; & \node (table2-layer4) [rect] {Ethernet}; \\
+    };
+
+    \node (table2-layer2) [draw,dashed,fit={($(table2-layer2a.north west)+(-0.25*\nodeheight,0.25*\nodeheight)$) ($(table2-layer2b.south east)+(0.25*\nodeheight,-0.25*\nodeheight)$)}] {};
+
+    \node [right=1 of table2-layer1] {\textit{Application Layer}};
+    \node [right=1 of table2-layer2b] {\textit{Transport Layer}};
+    \node [right=1 of table2-layer3] {\textit{Network Layer}};
+    \node [right=1 of table2-layer4] {\textit{Link Layer}};
+
+    \path [line] (table-layer1) -- (table-layer2);
+    \path [line] (table-layer2) -- (table-layer3);
+    \path [line] (table-layer3) -- (table-layer4);
+
+    \path [line] (table2-layer1) -- (table2-layer2a);
+    \path [line] (table2-layer2a) -- (table2-layer2b);
+    \path [line] (table2-layer2b) -- (table2-layer3);
+    \path [line] (table2-layer3) -- (table2-layer4);
+
+    \path [line,->] ($(table-layer2.east)+(0.5,0)$) -- ($(table2-layer2b.west)+(-0.5,0)$) node[midway,below,align=center] {encryption \\ added};
+  \end{tikzpicture}
+
+  \caption{Role of TLS in TCP/IP Reference Model}
+  \label{figure/tcp-ip-model}
+\end{figure}

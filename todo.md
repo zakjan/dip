@@ -10,7 +10,6 @@
     * Authenticated encryption
     * Secure communication channel
 * TLS
-    * úvod
     * historie
     * stavový automat
     * zdůraznit použití na internetu
