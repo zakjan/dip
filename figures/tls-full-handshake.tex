@@ -1,5 +1,6 @@
 \begin{figure}
   \centering
+
   \begin{tikzpicture}
     \node (table) [matrix,row sep=0.5*\nodeheight,column sep=2.5*\nodewidth] {
       \node (client) [rect] {Client}; & \node (server) [rect] {Server}; \\[0.5*\nodeheight]
@@ -39,7 +40,7 @@
     \path [line] (server12) -- (client12) node[above,near start] {[\textit{ChangeCipherSpec}]};
     \path [line] (server13) -- (client13) node[above,near start] {\textit{Finished}};
     \path [draw] ($(client13b)-(0.5*\nodewidth,0)$) -- ($(server13b)+(0.5*\nodewidth,0)$) node[above,midway] {handshake completed};
-    \path [line,<->] (client14) -- (server14) node[above,midway] {\textit{ApplicationData}};
+    \path [line,<->] (client14) -- (server14) node[above,midway] {\textit{Application}};
 
     \node [below=0 of table,xshift=-5mm] {
       \begin{tabular}{cl}
@@ -48,6 +49,7 @@
       \end{tabular}
     };
   \end{tikzpicture}
+
   \caption{TLS full handshake}
   \label{figures/tls-full-handshake}
 \end{figure}

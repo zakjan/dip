@@ -1,0 +1,19 @@
+\section{Records}
+
+\input{figures/tls-record.tex}
+
+At a high level, TLS protocol specifies a structure of every record (packet). Each TLS record starts with a short header, which contains information about the record type (subprotocol), protocol version and data length. Message data follows the header. See \autoref{figure/tls-record} for record structure.
+
+The record type is identified in the record by 1-byte integer ID as specified in \autoref{figure/tls-record-types}. The protocol version can be either SSL 3.0 (deprecated), TLS 1.0, TLS 1.1, TLS 1.2 and it is identified in the record by 2-byte integer ID as specified in \autoref{figure/tls-versions}. The data length field is 2-byte long and it specifies the message data length.
+
+There are the following record types (subprotocols):
+
+\begin{description}
+  \item[Handshake protocol] The handshake protocol to negotiate connection parameters, such as the cipher suite, authenticate each other and verify that handhshake messages haven't beed modified by an attacker.
+  \item[ChangeCipherSpec protocol] The ChangeCipherSpec protocol contains a single message, which is a signal from the sending side that it obtained enough information to generate the connection parameters, such as the encryption keys, and is switching all further communication to encryption. Client and server both send this message when the time is right.
+  \item[Alert protocol] Alerts are intended to use a simple notification mechanism to inform the other side in the communication of exceptional circumstances. They're generally used for error messages, as listed in \autoref{figure/tls-alert-types}.
+  \item[Application protocol] The Application protocol carries application messages, which are just opaque byte arrays as far as TLS is concerned. These messages are packaged, fragmented, and encrypted by the record layer, using the current connection security parameters, such as the negotiated cipher suite.
+  \item[Heartbeat protocol] The Heartbeat protocol extension allows a keep-alive functionallity without performing renegotiation. Its purpose is intended especially for DTLS, however it is implemented also in TLS.
+\end{description}
+
+This thesis focuses on negotiation of the cipher suite in the Handshake protocol and on application data encryption in the Application protocol.

@@ -1,0 +1,18 @@
+\begin{figure}
+  \centering
+
+  \begin{tikzpicture}
+    \node (row1) [struct] {
+      \node (type) [rect,minimum width=1cm] {Type}; & \node (version) [rect,minimum width=2cm] {Version}; & \node (length) [rect,minimum width=2cm] {Length}; \\
+    };
+    \node (row2) [struct,anchor=north west] at ($(row1.south west)+(1cm,-\nodeheight)$) {
+      \node (header) [rect,minimum width=2cm] {Header}; & \node (data) [rect,minimum width=7cm] {Data}; \\
+    };
+
+    \path [draw] (row1.south west) -- (header.north west);
+    \path [draw] (row1.south east) -- (header.north east);
+  \end{tikzpicture}
+
+  \caption{TLS record}
+  \label{figure/tls-record}
+\end{figure}

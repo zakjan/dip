@@ -1,5 +1,6 @@
 \begin{figure}[t]
   \centering
+
   \begin{tikzpicture}
     \node (alice) [rect,left=2.5] {Alice};
     \node [below=0 of alice] {$m$};
@@ -10,6 +11,7 @@
     \path [line,color=Gray] (eve) -- (0,0);
     \path [line] (alice) -- (bob) node[near start,below]{$m$} node[near end,below]{$m'$};
   \end{tikzpicture}
+
   \caption{How can Bob know who sent the message?}
   \label{figure/authentication-problem}
 \end{figure}

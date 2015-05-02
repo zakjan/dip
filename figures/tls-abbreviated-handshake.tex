@@ -1,5 +1,6 @@
 \begin{figure}
   \centering
+
   \begin{tikzpicture}
     \node (table) [matrix,row sep=0.5*\nodeheight,column sep=2.5*\nodewidth] {
       \node (client) [rect] {Client}; & \node (server) [rect] {Server}; \\[0.5*\nodeheight]
@@ -25,7 +26,7 @@
     \path [line] (client5) -- (server5) node[above,near start] {[\textit{ChangeCipherSpec}]};
     \path [line] (client6) -- (server6) node[above,near start] {\textit{Finished}};
     \path [draw] ($(client6b)-(0.5*\nodewidth,0)$) -- ($(server6b)+(0.5*\nodewidth,0)$) node[above,midway] {handshake completed};
-    \path [line,<->] (client7) -- (server7) node[above,midway] {\textit{ApplicationData}};
+    \path [line,<->] (client7) -- (server7) node[above,midway] {\textit{Application}};
 
     \node [below=0 of table,xshift=-5mm] {
       \begin{tabular}{cl}
@@ -33,6 +34,7 @@
       \end{tabular}
     };
   \end{tikzpicture}
+
   \caption{TLS abbreviated handshake}
   \label{figures/tls-abbreviated-handshake}
 \end{figure}

@@ -1,7 +1,7 @@
-\subsection{Handshake protocol}
+\section{Handshake protocol}
 \label{toc/tls-handshake}
 
-When a client and server start communicating, they use the handshake protocol to negotiate connection parameters, authenticate each other and verify that handhshake messages haven't beed modified by an attacker. It is the most complex part of the TLS protocol, because it performs these tasks:
+When a client and server start communicating, they use the handshake protocol to negotiate connection parameters, such as the cipher suite, authenticate each other and verify that handhshake messages haven't beed modified by an attacker. It is the most complex part of the TLS protocol, because it performs these tasks:
 
 \begin{itemize}
   \item exchange supported capabilities and agree on shared connection parameters (TLS protocol version, cryptographic algorithms)
@@ -11,7 +11,7 @@ When a client and server start communicating, they use the handshake protocol to
   \item verify that both parties have calculated the same secret values and they can be reliably used to transport application data via record protocol
 \end{itemize}
 
-This phase usually takes 6-13 messages in 3-4 network flights, depending on which features are used. There can be many variations in the exchange, depending on the configuration and supported protocol extensions. In practice, we can see three common flows:
+This phase usually takes 6-13 messages (see \autoref{tls-handshake-types} for list of all message types) in 3-4 network flights, depending on which features are used. There can be many variations in the exchange, depending on the configuration and supported protocol extensions. In practice, we can see three common flows:
 
 \begin{itemize}
   \item full handshake with client and server authentication
