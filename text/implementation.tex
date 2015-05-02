@@ -2,7 +2,7 @@
 
 All CAESAR candidates publish its encrypt/decrypt primitives through the same CAESAR API, see \autoref{toc/caesar-api}. I decided to implement a generic TLS cipher suite into OpenSSL in such way, that any CAESAR candidate can be used in the new cipher suite.
 
-This chapter documents my source code added to OpenSSL 1.0.2. Basically I implemented a bridge between OpenSSL EVP API and CAESAR API. I can compile my customized OpenSSL with any CAESAR cipher, and it works. For my testing purposes, I chose the NORX cipher, see \autoref{toc/caesar-norx}.
+This chapter documents my source code added to OpenSSL 1.0.2. Basically I implemented a bridge between OpenSSL EVP API and CAESAR API. I can compile my customized OpenSSL with any CAESAR cipher, and it works. For my testing purposes, I chose the NORX cipher, see \autoref{toc/caesar-selection}.
 
 There is no public documentation about implementing a new cipher or a new TLS cipher suite into OpenSSL, so I had to read through the OpenSSL source code a lot, tracing the code of already implemented ciphers and cipher suites.
 
@@ -88,7 +88,7 @@ Note that OpenSSL CLI \texttt{enc} command currently doesn't support any way to 
 \section{TLS cipher suite}
 \label{toc/implementation-cipher-suite}
 
-Any TLS cipher suite consists of various selected cryptographic primitives, providing key exchange, authentication, encryption and MAC. My thesis focuses only on a new encryption algorithm, so I implemented a new TLS cipher suite, which consists of Diffie-Hellman ephemeral (DHE) key exchange, RSA authentication, CAESAR encryption (see \autoref{toc/implementation-cipher} for details about implementation) and SHA256 pseudorandom function. There is no MAC, because MAC is already provided by the CAESAR AEAD cipher itself.
+Any TLS cipher suite consists of various selected cryptographic primitives, providing key exchange, authentication, encryption and MAC. My thesis focuses only on a new encryption algorithm, so I implemented a new TLS cipher suite, which consists of a secure choice of Diffie-Hellman ephemeral (DHE) key exchange, RSA authentication, CAESAR encryption (see \autoref{toc/implementation-cipher} for details about implementation) and SHA256 pseudorandom function. There is no MAC, because MAC is already provided by the CAESAR AEAD cipher itself.
 
 I named the new cipher suite to be consistent with existing cipher suites, \texttt{TLS\_DHE\_RSA\_WITH\_CAESAR\_SHA256} by IANA conventions and \texttt{DHE-RSA-CAESAR-SHA256} by OpenSSL conventions.
 

@@ -1,0 +1,30 @@
+\section{Source code}
+
+Download the source code from the official OpenSSL homepage\footnote{\url{https://www.openssl.org/source/}} and compare its hash fingerprints. The latest version in the time of writing is 1.0.2a.
+
+Compile it with commands:
+
+\begin{minted}{text}
+./config
+make
+\end{minted}
+
+It results into an all-in-one \texttt{apps/openssl} binary. You can run attached tests with \texttt{make test} command. If you wish to install it globally to your system, run \texttt{make install} command with root privileges.
+
+While making changes into OpenSSL code, sometimes I needed to debug the binary with GDB. You can turn on debugging symbols with \texttt{./config -d} command and build again.
+
+OpenSSL coding style in past was inconsistent, however in the recent stable version 1.0.2 it has been unified to conform a defined rules\footnote{\url{https://www.openssl.org/about/codingstyle.txt}}.
+
+OpenSSL provides two primary libraries: libssl and libcrypto. The libcrypto library provides the fundamental cryptographic routines used by libssl. A user can however use libcrypto without using libssl.
+
+OpenSSL source code contains a lot of various directories, for my purposes only the following are significant:
+
+\begin{itemize}
+  \item \texttt{apps} -- command-line tools
+  \item \texttt{crypto} -- libcrypto library
+  \item \texttt{ssl} -- libssl library
+  \item \texttt{demos} -- examples
+  \item \texttt{docs} -- man pages and howtos
+  \item \texttt{include} -- include header files
+  \item \texttt{util} -- perl scripts for C code generation
+\end{itemize}

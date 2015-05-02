@@ -1,0 +1,7 @@
+\section{libssl library}
+
+The libssl\footnote{\url{https://wiki.openssl.org/index.php/Libssl_API}} library is a part of OpenSSL source code in \texttt{ssl} directory and provides an open-source implementation of TLS protocol. It depends on the libcrypto library, as introduced in \autoref{toc/openssl-libcrypto}.
+
+It consists of both server and client code, which consists of functions that generate and parse all TLS record messages. It calls a common interface of the negotiated cipher suite to relevant generic cryptographic operations. The cipher suite calls libcrypto code using either low-level or high-level EVP API.
+
+Cipher suites which use the EVP API can take advantage from the common EVP interface, so such cipher suites can share code as well. Implementing a new cipher suite with EVP algorithms is as easy as adding a few declarations and almost no code at all.

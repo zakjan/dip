@@ -1,0 +1,137 @@
+\section{Command-line tools}
+
+OpenSSL is primarily a library that is used by developers to include support for strong cryptography in their programs. However it is also a tool that provides access to much of its functionality from command line. This way it can be used by shell scripts or programming languages that do not have native bindings, but can run shell commands. \cite{viega2002network}
+
+The \texttt{openssl} binary is an entry point for all commands. You call it following the pattern:
+
+\begin{minted}{text}
+openssl command [command_opts] [command_args]
+\end{minted}
+
+Alternatively you can call it without arguments to enter the interactive mode with an \texttt{OpenSSL>} prompt. Then you can directly type your commands. You can leave the interactive mode with Ctrl+C or Ctrl+D or by typing \texttt{quit}.
+
+You can get a list of available commands by calling:
+
+\begin{minted}{text}
+openssl list-standard-commands
+\end{minted}
+
+OpenSSL binary provides command-line access to the following significant cryptographic operations and applications:
+
+\begin{itemize}
+  \item \texttt{openssl dgst} -- a message digest command, producing or verifying a digest of supplied file(s) using hash functions or digital signature algorithms
+  \item \texttt{openssl enc} -- a symmetric cipher command, allowing data to be encrypted or decrypted using various block and stream ciphers, using keys derivated from passwords or explicitly provided
+  \item \texttt{openssl speed} -- a benchmark to test the performance of all included cryptographic algorithms
+  \item \texttt{openssl asn1parse} -- a diagnostic parser of ASN.1 encoded structures; public and private keys, certificates and other cryptographic structures are usually stored in ASN.1 format
+  \item \texttt{openssl x509} -- a multi-purpose utility to operate with X509 certificates
+  \item \texttt{openssl s\_server} -- a generic TCP+TLS server which listens on a given local port, it can operate either in plain text mode, or as a simple HTTP server, processing requests and responding with files in current directory
+  \item \texttt{openssl s\_client} -- a generic TCP+TLS client which connects to a remote host, very useful diagnostic tool
+  \item \texttt{openssl s\_time} -- a client which benchmarks the performance of a TLS connection
+\end{itemize}
+
+OpenSSL supports a lot of cryptographic algorithms, some of them also have their own aliases (pseudo-commands) for faster command line access. Supported algorithms and their corresponding pseudo-commands can be listed by the following commands:
+
+\begin{itemize}
+  \item \texttt{openssl list-message-digest-algorithms} -- list of message digest algorithms
+  \item \texttt{openssl list-message-digest-commands} -- list of message digest pseudo-commands
+  \item \texttt{openssl list-cipher-algorithms} -- list of symmetric encryption algorithms
+  \item \texttt{openssl list-cipher-commands} -- list of symmetric encryption pseudo-commands
+  \item \texttt{openssl list-public-key-algorithms} -- list of public key algorithms
+  \item \texttt{openssl ciphers -v [\textit{cipherlist}]} -- list of TLS cipher suites, complying with the given cipherlist, or all by default
+  \item \texttt{openssl ecparam -list\_curves} -- list of named elliptic curves
+\end{itemize}
+
+
+\subsection{Symmetric encryption}
+\label{toc/openssl-enc}
+
+The \texttt{openssl enc} command\footnote{\url{https://www.openssl.org/docs/apps/enc.html}} encrypts or decrypts given data using various supported ciphers. By default, it reads the data from standard input, a writes to standard output.
+
+It accepts the following significant options:
+
+\begin{itemize}
+  \item \texttt{-\textit{ciphername}} -- the cipher name, it specifies the requirements on the length of key and IV
+  \item \texttt{-d} -- decrypt the input data
+  \item \texttt{-K \textit{hex}} -- the key used in cipher, it must be represented as a string comprised only of hex digits
+  \item \texttt{-iv \textit{hex}} -- the IV used in cipher, it must be represented as a string comprised only of hex digits
+\end{itemize}
+
+Example:
+
+\inputminted{text}{code/openssl-enc-example.txt}
+
+
+\subsection{Performance benchmarking of cryptographic algorithms}
+
+The \texttt{openssl speed} command\footnote{\url{https://www.openssl.org/docs/apps/speed.html}} can run performance benchmarks of all included cryptographic algorithms - hash functions, symmetric ciphers, assymetric key exchanges and digital signatures.
+
+It accepts the following significant options:
+
+\begin{itemize}
+  \item \texttt{-evp \textit{algorithmname}} -- run benchmarks on an EVP algorithm
+  \item \texttt{\textit{algorithmnames}} -- if any algorithms are given, speed tests those algorithms, otherwise all are tested
+\end{itemize}
+
+Example:
+
+\inputminted{text}{code/openssl-speed-example.txt}
+
+
+\subsection{Generic server}
+\label{toc/openssl-s_server}
+
+The \texttt{openssl s\_server} command\footnote{\url{https://www.openssl.org/docs/apps/s\_server.html}} emulates a generic TCP server, which uses TLS to ensure a secure communication channel. It listens for incoming connections and after a connection is established, it forwards standard input to the opposite party through TLS data protocol, and writes all received data to standard output.
+
+It accepts the following significant options:
+
+\begin{itemize}
+  \item \texttt{-accept \textit{port}} -- the port to listen on for connections, 4433 by default
+  \item \texttt{-cert \textit{filename}} -- the certificate, a self-signed certificate can be used
+  \item \texttt{-key \textit{filename}} -- the certificate private key
+  \item \texttt{-cipher \textit{ciphernames}} -- the supported cipher list. When the client sends a list of supported ciphers, the first client cipher also included in the server list is chosen. Because the client specifies the preference order, the order of the server cipherlist irrelevant. This behavior can be overriden by \texttt{-serverpref} option.
+  \item \texttt{-serverpref} -- use the server's cipher preferences, rather than the client's preferences
+  \item \texttt{-WWW} -- emulates a simple web server. Resources will be resolved relative to the current directory, for example if the resource \texttt{/page.html} is requested, the file \texttt{./page.html} will be loaded.
+\end{itemize}
+
+Example, run in parallel with \texttt{s\_client} example:
+
+\inputminted{text}{code/openssl-s_server-example.txt}
+
+After the connection is established, a string "Lorem ipsum..." is successfully transferred from the client to the server.
+
+
+\subsection{Generic client}
+\label{toc/openssl-s_client}
+
+The \texttt{openssl s\_client} command\footnote{\url{https://www.openssl.org/docs/apps/s\_client.html}} emulates a generic TCP client, which uses TLS to ensure a secure communication channel. After a connection is established, it forwards standard input to the opposite party through TLS data protocol, and writes all received data to standard output.
+
+It accepts the following significant options:
+
+\begin{itemize}
+\item \texttt{-connect \textit{host:port}} -- the host and port to connect to, local host and port 4433 by default
+\item \texttt{-cipher \textit{ciphernames}} -- the supported cipher list. Although the server determines which cipher suite is used, it should take the first supported cipher in the list sent by the client.
+\end{itemize}
+
+Example, run in parallel with \texttt{s\_server} example:
+
+\inputminted{text}{code/openssl-s_client-example.txt}
+
+After the connection is established, a string "Lorem ipsum..." is successfully transferred from the client to the server.
+
+
+\subsection{Performance benchmarking of TLS}
+
+The \texttt{openssl s\_time} command\footnote{\url{https://www.openssl.org/docs/apps/s\_time.html}} emulates a generic TCP client, which uses TLS to ensure a secure communication channel. It can request a page from the server and includes the time to transfer the payload data in its timing measurements. It measures the number of connections within a given timeframe, the amount of data transferred (if any), and calculates the average time spent for one connection.
+
+It accepts the following significant options:
+
+\begin{itemize}
+  \item \texttt{-connect \textit{host:port}} -- the host and port to connect to, local host and port 4433 by default
+  \item \texttt{-cipher \textit{ciphernames}} -- the supported cipher list. Although the server determines which cipher suite is used, it should take the first supported cipher in the list sent by the client.
+  \item \texttt{-time \textit{sec}} -- specifies how long in seconds the benchmark should run
+  \item \texttt{-new} -- performs the timing test using a new session for each connection. If \texttt{-www} option is not used, this can be used to benchmark specifically the TLS handshake protocol.
+  \item \texttt{-reuse} -- performs the timing test using the same session for each connection. If \texttt{-www} option is not used, this can be used to benchmark specifically the TLS handshake protocol with session resume.
+  \item \texttt{-www \textit{filename}} -- this specifies the resource to GET from the server. If this parameter is not specified, then it will only perform the TLS handshake to establish a connections, but not transfer any data.
+\end{itemize}
+
+\inputminted{text}{code/openssl-s_time-example.txt}
