@@ -13,8 +13,8 @@ A cipher suite is defined by the following attributes:
     \item key size
     \item cipher mode
   \end{itemize}
-  \item MAC algorithm
-  \item Pseudorandom function
+  \item MAC algorithm (unless it is included in encryption algorithm)
+  \item Pseudorandom function (since TLS 1.2)
 \end{itemize}
 
 Cipher suite names are usually long, descriptive and consistent. They are made from names of underlying used algorithms. See \autoref{figure/cipher-suites} for sample common cipher suites.
@@ -33,7 +33,11 @@ Which key exchange is used depends on the negotiated suite. Once the suite is kn
 
 \subsection{Authentication}
 
-Authentication is tightly coupled with key exchange in order to avoid repetition of costly cryptographic operations. In most cases, the basis for authentication will be public key cryptography (most commonly RSA, but sometimes ECDSA) by X509 certificates. Once the certificate is validated, the client has a known public key to work with. After that, it's down to the particular key exchange method to use the public key in some way to authenticate the other side.
+Authentication is tightly coupled with key exchange in order to avoid repetition of costly cryptographic operations. In most cases, the basis for authentication will be public key cryptography (most commonly RSA, but sometimes ECDSA) by X509 certificates.
+
+The certificate is either compared to a preshared certificate or validated against a trusted root store managed by operating system. The trusted root store contains root certificates of default trusted \textit{Certificate Authorites} (CAs), which are privileged to issue X509 certificates. If TLS is used in web browser in HTTPS protocol, the browser can show the state of certificate validation to the user. Trusted certificate is usually signalized by a green lock icon, while untrusted certificate displays a warning and the user can decide if he trusts the certificate or not. See \autoref{toc/certificate-warnings} for browser behavior details.
+
+Once the certificate is validated, the client has a known public key to work with. After that, it's down to the particular key exchange method to use the public key in some way to authenticate the other side.
 
 During the RSA key exchange, the client generates a random value as the premaster secret and sends it encrypted with the server's public key. The server decrypts the message to obtain the premaster secret. The authentication is implicit. It is assumed that only the server in possession of the corresponding private key can retrieve the premaster secret.
 
@@ -45,8 +49,12 @@ Do not confuse authentication with message authentication. Asymmetric authentica
 
 TLS can encrypt data (as introduced in \autoref{toc/encryption}) using a variety of ways, using ciphers such as 3DES, RC4, AES or CAMELLIA. AES is by far the most popular cipher.
 
-Integrity validation (as introduced in \autoref{toc/message-authentication}) is part of the encryption process using an authenticated encryption scheme (as introduced in \autoref{toc/authenticated-encryption}). It is handled either explicitly at the protocol level using a Mac-then-Encrypt generic composition scheme or implicitly by the negotiated AEAD cipher.
+Integrity validation (as introduced in \autoref{toc/message-authentication}) is part of the encryption process using an authenticated encryption scheme (as introduced in \autoref{toc/authenticated-encryption}). It is handled either explicitly at the protocol level using a Mac-then-Encrypt generic composition scheme, example algorithms usually consist of HMAC and hash function such as MD5, SHA1, SHA256. Or it is handled implicitly by the negotiated AEAD cipher, the only AEAD cipher currently used in real world is AES-GCM.
 
 The MAC tag is computed from plaintext and additional data, such as TLS record header, to ensure that unencrypted data in the header can't be tampered with, and TLS record sequence number, to ensure that the messages can't be replayed.
 
 \subsection{Pseudorandom function}
+
+A pseudorandom function is used in TLS to expand the 48-byte master secret into arbitrary-length blocks of data, which can be used as shared keys in encryption, message authentication and other algorithms requiring secred shared data.
+
+Before TLS 1.2, a protocol-wide pseudorandom function was used, which was combined from HMAC-MD5 and HMAC-SHA1. Since TLS 1.2, it was defined a recommended PRF: HMAC-SHA256. New cipher suites must explicitly specify a PRF, the recommended PRF or stronger. Older cipher suites must use the recommended PRF when negotiated over TLS 1.2.

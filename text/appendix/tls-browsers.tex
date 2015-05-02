@@ -1,48 +1,61 @@
 \chapter{Security indication in browsers}
+\label{toc/certificate-warnings}
 
-There are different levels of security, that can be achieved by Browser security. All Internet browsers have different criterias to indicate user that connection from his computer to remote server is really secure.
+If TLS is used in web browser in HTTPS protocol, the browser can show the state of certificate validation to the user. A certificate trusted by system is usually signalized by a green lock icon, while untrusted certificate displays a warning and the user can decide if he trusts the certificate or not manually.
 
-We can divide browsers' security indication to five categories:
+Additionally browsers can display a green bar with company name if the certificate is EV validated, in order to increase users' confidence of the server identity. It is useful in case of communication where the identity must be verfied with the lowest false positive possible, such as with banks or government.
+
+We can divide browsers' indication of connection security to five categories:
 
 \begin{itemize}
-  \item No certificate
-  \item Untrusted certificate
-  \item Trusted certificate with warning
+  \item No security
+  \item Encrypted, failed authentication
   \begin{itemize}
-    \item warning content
-    \item obsolete cryptographic primitives
+    \item self-signed certificate
+    \item expired certificate
+    \item forged certificate
   \end{itemize}
-  \item Trusted certificate
-  \item Trusted certificate with Extended Validation
+  \item Encrypted, authenticated, with warning
+  \begin{itemize}
+    \item mixed content from secured and unsecured sources
+    \item deprecated cryptographic primitives
+  \end{itemize}
+  \item Encrypted, authenticated
+  \begin{itemize}
+    \item domain ownership is validated
+  \end{itemize}
+  \item Encrypted, authenticated with \textit{Extended Validation} (EV)
+  \begin{itemize}
+    \item domain ownership and company existence is validated
+  \end{itemize}
 \end{itemize}
 
-\todo{describe indication and browser differences}
 
 \begin{figure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/ch-none.png}
-    \caption{No certificate}
+    \caption{No security}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/ch-untrusted.png}
-    \caption{Untrusted certificate}
+    \caption{Encrypted, failed authentication}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/ch-warning.png}
-    \caption{Trusted certificate with warning}
+    \caption{Encrypted, authenticated, with warning}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/ch-dv.png}
-    \caption{Trusted certificate}
+    \caption{Encrypted, authenticated}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/ch-ev.png}
-    \caption{Trusted certificate with Extended Validation}
+    \caption{Encrypted, authenticated with EV}
   \end{subfigure}
   \caption{Browser security indication - Chrome 40}
 \end{figure}
@@ -51,27 +64,27 @@ We can divide browsers' security indication to five categories:
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/ff-none.png}
-    \caption{No certificate}
+    \caption{No security}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/ff-untrusted.png}
-    \caption{Untrusted certificate}
+    \caption{Encrypted, failed authentication}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/ff-warning.png}
-    \caption{Trusted certificate with warning}
+    \caption{Encrypted, authenticated, with warning}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/ff-dv.png}
-    \caption{Trusted certificate}
+    \caption{Encrypted, authenticated}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/ff-ev.png}
-    \caption{Trusted certificate with Extended Validation}
+    \caption{Encrypted, authenticated with EV}
   \end{subfigure}
   \caption{Browser security indication - Firefox 35}
 \end{figure}
@@ -80,27 +93,27 @@ We can divide browsers' security indication to five categories:
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/ie-none.png}
-    \caption{No certificate}
+    \caption{No security}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/ie-untrusted.png}
-    \caption{Untrusted certificate}
+    \caption{Encrypted, failed authentication}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/ie-warning.png}
-    \caption{Trusted certificate with warning}
+    \caption{Encrypted, authenticated, with warning}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/ie-dv.png}
-    \caption{Trusted certificate}
+    \caption{Encrypted, authenticated}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/ie-ev.png}
-    \caption{Trusted certificate with Extended Validation}
+    \caption{Encrypted, authenticated with EV}
   \end{subfigure}
   \caption{Browser security indication - IE 11}
 \end{figure}
@@ -109,27 +122,27 @@ We can divide browsers' security indication to five categories:
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/iemetro-none.png}
-    \caption{No certificate}
+    \caption{No security}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/iemetro-untrusted.png}
-    \caption{Untrusted certificate}
+    \caption{Encrypted, failed authentication}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/iemetro-warning.png}
-    \caption{Trusted certificate with warning}
+    \caption{Encrypted, authenticated, with warning}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/iemetro-dv.png}
-    \caption{Trusted certificate}
+    \caption{Encrypted, authenticated}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/iemetro-ev.png}
-    \caption{Trusted certificate with Extended Validation}
+    \caption{Encrypted, authenticated with EV}
   \end{subfigure}
   \caption{Browser security indication - IE 11 (Metro)}
 \end{figure}
@@ -138,27 +151,27 @@ We can divide browsers' security indication to five categories:
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/o-none.png}
-    \caption{No certificate}
+    \caption{No security}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/o-untrusted.png}
-    \caption{Untrusted certificate}
+    \caption{Encrypted, failed authentication}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/o-warning.png}
-    \caption{Trusted certificate with warning}
+    \caption{Encrypted, authenticated, with warning}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/o-dv.png}
-    \caption{Trusted certificate}
+    \caption{Encrypted, authenticated}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/o-ev.png}
-    \caption{Trusted certificate with Extended Validation}
+    \caption{Encrypted, authenticated with EV}
   \end{subfigure}
   \caption{Browser security indication - Opera 27}
 \end{figure}
@@ -167,27 +180,27 @@ We can divide browsers' security indication to five categories:
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/s-none.png}
-    \caption{No certificate}
+    \caption{No security}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/s-untrusted.png}
-    \caption{Untrusted certificate}
+    \caption{Encrypted, failed authentication}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/s-warning.png}
-    \caption{Trusted certificate with warning}
+    \caption{Encrypted, authenticated, with warning}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/s-dv.png}
-    \caption{Trusted certificate}
+    \caption{Encrypted, authenticated}
   \end{subfigure}
   \begin{subfigure}[b]{\textwidth}
     \centering
     \includegraphics[scale=0.6]{images/browsers/s-ev.png}
-    \caption{Trusted certificate with Extended Validation}
+    \caption{Encrypted, authenticated with EV}
   \end{subfigure}
   \caption{Browser security indication - Safari 5.1}
 \end{figure}
