@@ -137,7 +137,7 @@ I entered a fixed message (\textit{"Lorem ipsum dolor sit amet, consectetur adip
 \inputminted{text}{code/caesar-s_client.txt}
 \inputminted{text}{code/caesar-s_server.txt}
 
-I watched the communication using the Wireshark application, which is capable of monitoring network traffic. It shows the TLS Handshake Protocol (see \autoref{toc/tls-handshake}) messages negotiating the new cipher suite identified by ID \texttt{FF81} and the TLS Data Protocol (see \todo{refit}) messages carrying the encrypted data.
+I watched the communication using the Wireshark application, which is capable of monitoring network traffic. It shows the TLS Handshake protocol (as described in \autoref{toc/tls-handshake}) messages negotiating the new cipher suite identified by ID \texttt{FF81} and the TLS Application protocol messages carrying the encrypted data.
 
 In Wireshark, I logged all communication on local loopback network interface and filtered all TLS communication. See the packet capture \autoref{table/packet-capture}. For the purpose of verifying my implementation, there are following important packets with TLS protocol messages:
 

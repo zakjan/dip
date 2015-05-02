@@ -45,4 +45,4 @@ A full handshake is completed after 4 network flights before the handshake is co
   \item handshake is completed, secure communication channel is established, both parties can securely send application data
 \end{enumerate}
 
-An abbreviated handshake is completed after 3 network flights, thus adding a latency penalty of just 1 RRT if the client sends application data first. See \autoref{figures/tls-abbreviated-handshake}. The session reuses previously exchanged secret values between the client and server, identified by either \textit{Session Tickets} or \textit{Session Cookies}.
+An abbreviated handshake is completed after 3 network flights, thus adding a latency penalty of just 1 RtT if the client sends application data first. See \autoref{figures/tls-abbreviated-handshake}. The session reuses previously exchanged secret values between the client and server, identified by either \textit{Session Tickets} or \textit{Session Cookies}.

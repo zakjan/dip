@@ -16,3 +16,5 @@ Many of IETF RFCs describe security algorithms, protocols, or recommendations. T
   \item[RFC5288] AES Galois Counter Mode (GCM) Cipher Suites for TLS
   \item[RFC6655] AES-CCM Cipher Suites for Transport Layer Security (TLS)
 \end{description}
+
+TLS implementations are typically written as a set of functions that generate and parse each message, and perform the relevant cryptographic operations. The state machine that this process must implement, is currently not standardized, and differs between implementations. Allowing unexpected trnasitions in this state machine can lead to unexpected behavior. There is an effort to standardize the TLS state machine to allow formal verification of core components in cryptographic protocol libraries. \cite{tls-state-machine}
