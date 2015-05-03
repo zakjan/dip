@@ -12,6 +12,6 @@ To prevent Eve from understanding the conversation, Alice and Bob want to use en
 
 So Alice wants to send a \textit{plaintext} message $m$. She first encrypts it using the encrypt function $E(K_e, m)$ to get a \textit{ciphertext} message $c$. It can be sent over the communication channel, because only Alice and Bob know how to decrypt it. When Bob receives the ciphertext, he can decrypt it using the decrypt function $D(K_e, c)$ to get the original plaintext $m$ that Alice wanted to send to him.
 
-Now Eve tries to listen to the message, but she receives only ciphertext message $c$. If we assume she doesn't know the encryption key $K_e$, she can't decrypt it.
+Now Eve tries to listen to the message, but she receives only ciphertext message $c$. If we assume she does not know the encryption key $K_e$, she cannot decrypt it.
 
 Example algorithms: RC4, DES, AES

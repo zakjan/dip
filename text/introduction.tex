@@ -1,0 +1,11 @@
+\begin{introduction}
+
+At its core, the Internet is built on top of IP and TCP protocols, which are used to package data into small packets for transport. As these packets travel across the world, they cross many computer systems in many countries. Because the core protocols do not provide any security by themselves, anyone with access to the communication links can gain full access to the data as well as change the traffic without detection.
+
+Over the last years, the Internet has grown into a major platform for the world's communication. The Internet's trustworthiness has become critical to its success. If a person cannot trust that they are communicating with the party they intend, they will not give out their confidential data. If they cannot be assured that delivered information is not modified in transit, they will not trust it as much.
+
+Currently the TLS protocol uses a MAC-then-Encrypt generic composition of encryption and authentication algorithm to achieve both confidentiality and integrity. More recently, the idea of using a single cryptosystem has become accepted. In this concept, the MtE composition is replaced by a single authenticated encryption algorithm, such as AES-GCM.
+
+This thesis focuses on the OpenSSL cryptographic library, which is the most frequently used implementation of the TLS protocol worldwide. It implements a new authenticated encryption algorithm into the TLS protocol.
+
+\end{introduction}

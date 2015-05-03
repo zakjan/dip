@@ -53,7 +53,7 @@ Integrity validation (as introduced in \autoref{toc/message-authentication}) is 
 
 Or the integrity validation can be handled implicitly by the negotiated AEAD cipher. Currently it is recommended to prefer AEAD to generic composition cipher suites, because they can offer better performance and security. However there is only one widespread AEAD cipher, AES-GCM. The CAESAR competition as described in \autoref{toc/caesar} focuses on finding new AEAD ciphers.
 
-The MAC tag is computed from plaintext and additional data, such as TLS record header, to ensure that unencrypted data in the header can't be tampered with, and TLS record sequence number, to ensure that the messages can't be replayed.
+The MAC tag is computed from plaintext and additional data, such as TLS record header, to ensure that unencrypted data in the header cannot be tampered with, and TLS record sequence number, to ensure that the messages cannot be replayed.
 
 \subsection{Pseudorandom function}
 

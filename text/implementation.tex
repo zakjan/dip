@@ -6,7 +6,7 @@ This chapter documents my source code added to OpenSSL 1.0.2. Basically I implem
 
 There is no public documentation about implementing a new cipher or a new TLS cipher suite into OpenSSL, so I had to read through the OpenSSL source code a lot, tracing the code of already implemented ciphers and cipher suites.
 
-The OpenSSL code is a joint work of many security experts, verified by real-world production usage and it can contain a lot of undocumented hidden knowledge. Because of no public documentation about this topic, I consider my implementation as experimental and O'm sure that my implementation is not perfect, it can contain hidden security bugs. Having this in mind, \textbf{I don't recomment my code for production under any circumstances.}
+The OpenSSL code is a joint work of many security experts, verified by real-world production usage and it can contain a lot of undocumented hidden knowledge. Because of no public documentation about this topic, I consider my implementation as experimental and O'm sure that my implementation is not perfect, it can contain hidden security bugs. Having this in mind, \textbf{I do not recomment my code for production under any circumstances.}
 
 \section{Cipher}
 \label{toc/implementation-cipher}
@@ -42,7 +42,7 @@ The cipher's \texttt{cleanup} function (specifically \texttt{caesar\_cleanup}) i
 
 \inputminted{c}{code/openssl/crypto/evp/caesar/e_caesar_cleanup.c}
 
-The cipher's \texttt{ctrl} function (specifically \texttt{caesar\_ctrl}) is used to invoke special actions, which don't have a specific field in the \texttt{EVP\_CIPHER} struct. I needed only one specific action, \texttt{EVP\_CTRL\_AEAD\_TLS1\_AAD} for setting associated data from TLS library.
+The cipher's \texttt{ctrl} function (specifically \texttt{caesar\_ctrl}) is used to invoke special actions, which do not have a specific field in the \texttt{EVP\_CIPHER} struct. I needed only one specific action, \texttt{EVP\_CTRL\_AEAD\_TLS1\_AAD} for setting associated data from TLS library.
 
 \inputminted{c}{code/openssl/crypto/evp/caesar/e_caesar_ctrl.c}
 
@@ -80,7 +80,7 @@ The script's output follows.
 
 \inputminted{text}{code/test-enc.sh.out}
 
-Note that OpenSSL CLI \texttt{enc} command currently doesn't support any way to provide additional authenticated data. Actually it doesn't support AEAD ciphers at all, there is a condition checking for AEAD flag in the cipher's flags field, which throws an error. I commented off this condition, because I needed this command to test the new cipher. There is no harm in doing so, additional authenticated data can be empty, and the MAC tag is still checked by the cipher itself.
+Note that OpenSSL CLI \texttt{enc} command currently does not support any way to provide additional authenticated data. Actually it does not support AEAD ciphers at all, there is a condition checking for AEAD flag in the cipher's flags field, which throws an error. I commented off this condition, because I needed this command to test the new cipher. There is no harm in doing so, additional authenticated data can be empty, and the MAC tag is still checked by the cipher itself.
 
 \inputminted{c}{code/openssl/apps/enc.c}
 
@@ -92,7 +92,7 @@ Any TLS cipher suite consists of various selected cryptographic primitives, prov
 
 I named the new cipher suite to be consistent with existing cipher suites, \texttt{TLS\_DHE\_RSA\_WITH\_CAESAR\_SHA256} by IANA conventions and \texttt{DHE-RSA-CAESAR-SHA256} by OpenSSL conventions.
 
-The new cipher suite which can be negotiated by client and server in TLS handshake (see \autoref{toc/tls-handshake} for details). During the handshake, cipher suites are represented by IDs. Public cipher suites are registered by IANA organization\footnote{\url{http://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml}} and they are assigned with unique IDs, which are known to all parties. I didn't want to publish the new cipher suite to production, I consider it experimental, so I used a private space of IDs: \textit{"All cipher suites whose first byte is 0xFF are considered private and can be used for defining local/experimental algorithms."} \cite{rfc2246} So I chose the ID for the new cipher suite to be \texttt{FF81}.
+The new cipher suite which can be negotiated by client and server in TLS handshake (see \autoref{toc/tls-handshake} for details). During the handshake, cipher suites are represented by IDs. Public cipher suites are registered by IANA organization\footnote{\url{http://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml}} and they are assigned with unique IDs, which are known to all parties. I did not want to publish the new cipher suite to production, I consider it experimental, so I used a private space of IDs: \textit{"All cipher suites whose first byte is 0xFF are considered private and can be used for defining local/experimental algorithms."} \cite{rfc2246} So I chose the ID for the new cipher suite to be \texttt{FF81}.
 
 \subsection{Implementation}
 
@@ -161,7 +161,7 @@ The server receives the ClientHello message, compares the client's capabilities 
 
 The client and server now performs a check if the secret communication channel was sucessfully established. They send a ChangeCipherSpec message signalizing that all subsequent communitaion is encrypted by the selected cipher suite and a Finished message containing some data known to both parties. If decryption succeeds, they can start transmitting ApplicationData messages.
 
-There is a single ApplicationData message which doesn't contain any plaintext data. Nobody should be able to decrypt it, because the secret key is exchanged assymetrically by Diffie-Hellman algorithm. I can confirm that it contains my message by comparing plaintext and ciphertext lengths.
+There is a single ApplicationData message which does not contain any plaintext data. Nobody should be able to decrypt it, because the secret key is exchanged assymetrically by Diffie-Hellman algorithm. I can confirm that it contains my message by comparing plaintext and ciphertext lengths.
 
 \inputminted{text}{code/packet-data.txt}
 

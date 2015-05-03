@@ -48,14 +48,14 @@ The meaning of its important parameters follows:
   \item \texttt{do\_cipher} -- function pointer; called during sending the input data, it should perform the encrypt/decrypt operation
   \item \texttt{cleanup} -- function pointer; called during finalization, it can free the cipher context after the operation
   \item \texttt{ctx\_size} -- integer; cipher-specific context size, can be used to store cipher-specific data during the operation
-  \item \texttt{ctrl} -- function pointer; used to invoke special actions, which don't have a specific field in the \texttt{EVP\_CAESAR} struct
+  \item \texttt{ctrl} -- function pointer; used to invoke special actions, which do not have a specific field in the \texttt{EVP\_CAESAR} struct
 \end{itemize}
 
 Prior to performing the encrypt/decrypt operation, a cipher context must be allocated and initialized to store setting and state during the operation. The cipher context is represented by \texttt{EVP\_CIPHER\_CTX} struct.
 
 \inputminted{c}{code/openssl-evp-cipher-ctx-new.c}
 
-Note the cipher context is different from cipher-specific context. The cipher-specific context is stored inside of the cipher context, however the cipher-specific context is allocated and freed by the cipher itself in its \texttt{init} and \texttt{cleanup} functions, which are called by EVP internally, and a user doesn't need to care about it.
+Note the cipher context is different from cipher-specific context. The cipher-specific context is stored inside of the cipher context, however the cipher-specific context is allocated and freed by the cipher itself in its \texttt{init} and \texttt{cleanup} functions, which are called by EVP internally, and a user does not need to care about it.
 
 So now we are prepared to perform the encrypt/decrypt operation. First, we need to set a cipher, a secret key and an initialization vector (IV). We can use an initialization function, specifically named \texttt{EVP\_EncryptInit\_ex} or \texttt{EVP\_DecryptInit\_ex}. There is also an universal \texttt{EVP\_CipherInit\_ex} function with \texttt{enc} parameter, which controls which operation is performed. However I recommend the first option, because usually we are sure which operation do we want to perform, so it should be hardcoded using the specific functions instead of depending of an integer parameter. It internally calls the cipher's \texttt{init} function from the \texttt{EVP\_CIPHER} struct.
 
@@ -94,7 +94,7 @@ Encryption using the EVP API consists of the following stages:
 
 The sample \texttt{encrypt} function uses AES-128 in CBC mode. It takes as arguments the plaintext, the length of the plaintext, the key, and the IV. Also it takes in a buffer to put the ciphertext in (which we assume to be long enough), and will return the length of the ciphertext that it writtes.
 
-The length of plaintext is necessary, OpenSSL can't use \texttt{strlen} function to determine its length, because it can contain any data, even null (\texttt{\textbackslash0}) bytes. The length of key and IV is fixed, appropriate for the chosen cipher, which means both the key and IV 16 bytes long for AES-128 in CBC mode.
+The length of plaintext is necessary, OpenSSL cannot use \texttt{strlen} function to determine its length, because it can contain any data, even null (\texttt{\textbackslash0}) bytes. The length of key and IV is fixed, appropriate for the chosen cipher, which means both the key and IV 16 bytes long for AES-128 in CBC mode.
 
 The source code follows. It misses the most of error handling code, which would be necessary in a real application.
 
@@ -134,7 +134,7 @@ Authenticated encryption using the EVP API in much the same way as for symmetric
 
 The sample \texttt{encrypt} function uses AES-128 in GCM mode. It takes as arguments the plaintext, the length of the plaintext, the key, and the IV. Also it takes in a buffer to put the ciphertext and the MAC tag in (which we assume to be long enough), and will return the length of the ciphertext that it writtes.
 
-The length of plaintext is necessary, OpenSSL can't use \texttt{strlen} function to determine its length, because it can contain any data, even null (\texttt{\textbackslash0}) bytes. The length of key, IV and MAC tag is fixed, appropriate for the chosen cipher, which means the key 16 bytes long, the IV 12 bytes long and the MAC tag 16 bytes for AES-128 in GCM mode by default.
+The length of plaintext is necessary, OpenSSL cannot use \texttt{strlen} function to determine its length, because it can contain any data, even null (\texttt{\textbackslash0}) bytes. The length of key, IV and MAC tag is fixed, appropriate for the chosen cipher, which means the key 16 bytes long, the IV 12 bytes long and the MAC tag 16 bytes for AES-128 in GCM mode by default.
 
 The source code follows. It misses the most of error handling code, which would be necessary in a real application.
 

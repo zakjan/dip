@@ -1,13 +1,13 @@
 \section{Handshake protocol}
 \label{toc/tls-handshake}
 
-When a client and server start communicating, they use the handshake protocol to negotiate connection parameters, such as the cipher suite, authenticate each other and verify that handhshake messages haven't beed modified by an attacker. It is the most complex part of the TLS protocol, because it performs these tasks:
+When a client and server start communicating, they use the handshake protocol to negotiate connection parameters, such as the cipher suite, authenticate each other and verify that handhshake messages have not beed modified by an attacker. It is the most complex part of the TLS protocol, because it performs these tasks:
 
 \begin{itemize}
   \item exchange supported capabilities and agree on shared connection parameters (TLS protocol version, cryptographic algorithms)
   \item exchange necessary cryptographic parameters to agree on shared secret values (\textit{master secret}) using public-key cryptography
   \item exchange certificates or other cryptographic information to authenticate one another
-  \item verify that the handshake hasn't beed tampered by a third party
+  \item verify that the handshake has not beed tampered by a third party
   \item verify that both parties have calculated the same secret values and they can be reliably used to transport application data via record protocol
 \end{itemize}
 
@@ -22,7 +22,7 @@ This phase usually takes 6-13 messages (see \autoref{figure/tls-handshake-types}
 \input{figures/tls-full-handshake.tex}
 \input{figures/tls-abbreviated-handshake.tex}
 
-If a client and server hasn't previously communicated with each other, both parties will perform a full or basic handshake in order to establish a session. See \autoref{figures/tls-full-handshake}.
+If a client and server has not previously communicated with each other, both parties will perform a full or basic handshake in order to establish a session. See \autoref{figures/tls-full-handshake}.
 
 Full handshake requires client authentication, whereas basic handshake does not. Also it is possible to perform an anonymous handshake without any authentication, but it is not recommended, because it is sucpectible to MitM attacks.
 

@@ -1,0 +1,13 @@
+\begin{conclusion}
+
+The TLS protocol consists of a complex structure of standardized RFC documents by IETF. I studied the most important ones to understand the flow of the TLS protocol over the network. I examined its implementation in the OpenSSL library, which consists of a complicated, decades-old C code. Nonetheless this library is massively used in the real world and it is an important part of critical infrastructure of the Internet.
+
+I studied the field of authenticated encryption while following the course of the CAESAR competition and recently published relevant papers. I classified CAESAR submissions by their design principles, overall construction and underlying primitives. I presented functional requirements and selection criteria for the winning candidates.
+
+During the time of writing this thesis, the announcement of second-round candidates keeps being postponed. I did not have enough information to make a quallified choice, so I decided to implement a cipher using the generic CAESAR API.
+
+As a reference for my implementation I chose the NORX cipher, because it has received no negative analysis. However it is not important which particular cipher I used. It can be easily substituted for a different one complying with the CAESAR API, as soon as the second-round or the final candidates are announced.
+
+I successfully tested my implementation by observing TLS network communication between server and client.
+
+\end{conclusion}

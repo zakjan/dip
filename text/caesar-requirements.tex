@@ -22,7 +22,7 @@ A \textit{ciphertext} is a variable-length input/output counterpart of the plain
 
 A \textit{key} is a fixed-length input, which determines the output of both encrypt and decrypt functions. The key must be shared between both communicating parties prior to encrypted communication. Without a key or with a different one then used in the encrypt function, the decrypt function produces no useful result. This follows the Kerckhoffs' principle as introduced in \autoref{toc/kerckhoffs-principle}.
 
-An \textit{associated data} is a variable-length input, a piece of information known by both communicating parties, which doesn't need to meet confidentiality requirement. However, its origin still needs to be verified by the receiving party. It can be for example some message metadata, such as version of used protocol.
+An \textit{associated data} is a variable-length input, a piece of information known by both communicating parties, which does not need to meet confidentiality requirement. However, its origin still needs to be verified by the receiving party. It can be for example some message metadata, such as version of used protocol.
 
 A \textit{nonce} (number used once) is a fixed-length input. It is a public value, which which is usually used as IV for the enclosed cipher. Such IVs should be unique for each encryption run, so it makes all ciphertexts undistinguishable even if the same key, message and associated data is used.
 

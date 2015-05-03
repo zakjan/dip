@@ -10,7 +10,7 @@ To prevent Eve from undetectably modifying or forging messages, Alice and Bob wa
 
 So Alice wants to send a message $m$. She first computes a signature $a$ using the sign function $S(K_a, m)$. This signature is also called \textit{Message Authentication Code} (MAC). The message along with its signature can be sent over the communication channel, because only Alice and Bob know how to generate the signature. When Bob receives the message, he verifies the signature using the verify function $V(K_a, m, a)$, if it passes, he can be sure that Alice sent the message.
 
-Now Eve tries to modify the message $m$ to a different message $m'$. If we assume that she doesn't know the authentication key $K_a$, she can only replace $m$ with $m'$. Bob will try to verify it, but it fails, so Bob will recognize that the message is not correct and he will discard it.
+Now Eve tries to modify the message $m$ to a different message $m'$. If we assume that she does not know the authentication key $K_a$, she can only replace $m$ with $m'$. Bob will try to verify it, but it fails, so Bob will recognize that the message is not correct and he will discard it.
 
 Pure authentication is only a partial solution. Eve can still do a lot of other malicious actions. Imagine Alice sending to Bob a messages containing requests for bank transfer. Eve can record a message and then send it to Bob later again (replay it), reorder messages, or completely delete messages. Therefore, authentication is almost always combined with a message numbering scheme. If a message $m$ contains such a message number, Bob is not fooled by Eve when she replays old messages. Bob will simply see that the message has correct signature, but the message number is from an old message, so he will discard it.
 

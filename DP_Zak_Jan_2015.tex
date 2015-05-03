@@ -66,25 +66,25 @@
 \authorFN{Žák}
 \authorWithDegrees{Bc. Jan Žák}
 \supervisor{prof. Ing. Róbert Lórencz, CSc.}
-\acknowledgements{\todo{Acknowledgements}}
-\abstractEN{\todo{Summarize the contents and contribution of your work in a few sentences in English language.}}
-\abstractCS{\todo{V několika větách shrňte obsah a přínos této práce v českém jazyce.}}
+\acknowledgements{My sincere thanks goes to prof. Wu Hongjun, Assistant Professor at Nangyang Technological University, Singapore, who served as my external supervisor, advised about my thesis and provided an invaluable insight into the field of authenticated encryption.}
+\abstractEN{This thesis focuses on adding a new authenticated encryption cipher suite in the OpenSSL implementation of the TLS protocol using the EVP API. The cipher was selected from CAESAR competition submissions. The new cipher suite was successfully tested by analysing TLS network communication between server and client.}
+\abstractCS{Tato práce se zaměřuje na přidání nové šifrovací sady s autentizovaným šifrováním do OpenSSL implementace TLS protokolu použitím EVP API. Nová šifra byla vybrána z přihlášených algoritmů do CAESAR soutěže. Nová šifrovací sada byla úspěšně otestována analýzou TLS síťové komunikace mezi serverem a klientem.}
 \placeForDeclarationOfAuthenticity{Prague}
-\declarationOfAuthenticityOption{4} % TODO
-\keywordsCS{\todo{Replace with comma-separated list of keywords in Czech.}}
-\keywordsEN{\todo{Replace with comma-separated list of keywords in English.}}
+\declarationOfAuthenticityOption{4}
+\keywordsCS{autentizované šifrování s přidruženými daty,caesar soutěž,openssl evp api,openssl knihovna,tls šifrovací sady,tls protokol}
+\keywordsEN{authenticated encryption with associated data,caesar competition,openssl evp api,openssl library,tls cipher suite,tls protocol}
 
 
 \begin{document}
 
 
-\input{text/intro.tex}
+\input{text/introduction.tex}
 \input{text/crypto.tex}
 \input{text/caesar.tex}
 \input{text/tls.tex}
 \input{text/openssl.tex}
 \input{text/implementation.tex}
-\input{text/result.tex}
+\input{text/conclusion.tex}
 \input{text/bibliography.tex}
 \appendix
 \input{text/appendix/symbols.tex}

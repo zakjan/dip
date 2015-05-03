@@ -52,7 +52,7 @@ The selection of second-round candidates will focus not only on general security
 
 \begin{description}
   \item[High Security] The schema should be secure against all known kinds of cryptanalysis.
-  \item[High Speed] The schema should be fast enough to compete with existing ciphers. However it is arguable whether the speed can be achieved by hardware acceleration such as by AES-NI or SIMD (SSE2, AVX2) instruction sets, because it doesn't need to be available on all platforms.
+  \item[High Speed] The schema should be fast enough to compete with existing ciphers. However it is arguable whether the speed can be achieved by hardware acceleration such as by AES-NI or SIMD (SSE2, AVX2) instruction sets, because it does not need to be available on all platforms.
   \item[Simplicity] Clean design principles simplify cryptanalysis and allow a straightforward implementation in software and hardware.
   \item[Minimum Overhead] The ciphertext will be always larger than the plaintext, because it needs to include the MAC tag. However, this length difference should be minimal.
   \item[Side-Channel Robustness] The schema should resist against timing side-channel attacks, e.g. by avoiding data-dependant table look-ups (S-Boxes) or integer arithmetrics.
