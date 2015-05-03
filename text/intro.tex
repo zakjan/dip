@@ -1,37 +1,19 @@
 \begin{introduction}
 
-\color{blue}
+At its core, the Internet is built on top of IP and TCP protocols, which are used to package data into small packets for transport. As these packets travel across the world, they cross many computer systems in many countries. Because the core protocols don't provide any security by themselves, anyone with access to the communication links can gain full access to the data as well as change the traffic without detection.
 
-Over the last 25 years, the Web has grown into a platform for much of the world’s communication, whether it be information sharing, community building, commerce, education, social networking, or underpinning applications.
+Over the last years, the Internet has grown into a major platform for the world's communication. The Internet's trustworthiness has become critical to its success. If a person cannot trust that they are communicating with the party they intend, they won't give out their confidential data. If they cannot be assured that delivered information isn't modified in transit, they won't trust it as much.
 
-In meeting these needs, the Web’s trustworthiness has become critical to its success. If a person cannot trust that they are communicating with the party they intend, they can’t use the Web to shop safety; if they cannot be assured that Web-delivered news isn’t modified in transit, they won’t trust it as much. If someone cannot be assured that they’re talking only to the intended recipients, they might avoid social networking.
+The important properties of confidentiality, authentication and integrity are currently best provided on the Internet by the TLS protocol. The HTTP protocol implements it in its secure HTTPS variant, which means using \textit{"https://"} URLs. In the past, websites have deployed HTTPS rarely, often only when financial transactions take place.
 
-These important properties of authentication, integrity and increased confidentiality are currently best provided on the Web by Transport Layer Security (TLS) [RFC5246]. For the HTTP protocol, this means using "https://" URLs [RFC7230].
+More recently, however, it has become apparent that nearly all activity on the Internet can be considered sensitive. If a third party can modify content in transit, the power of the Internet can easily be turned against the user. For example, internet providers can "harmlessly" insert advertisements into websites. More hostile attacks include editing crucial information on the website, or injecting malware.
 
-In the past, Web sites have deployed HTTPS rarely; often, only when financial transactions take place. More recently, however, it has become apparent that nearly all activity on the Web can be considered sensitive, since it now plays such a central role in everyday life.
+The TLS protocol does not dictate which cryptographic algorithms need to be used. Instead, TLS serves as a framework establishing and maintaining a secure comminucation channel suitable for sending sensitive messages, while new cryptographic algorithms can be implemented using a common interface.
 
-At the same time, security on the Web has proven to be quite subtle. If an attacker can modify content in transit, the power of the Web platform we are defining can easily be turned against the user (or the site they are using).
+Currently the TLS protocol uses a MAC-then-Encrypt generic composition to achieve both confidentiality and integrity goals. More recently, the idea of providing both confidentiality and integrity goals using a single cryptosystem has become accepted. In this concept, the combination of encryption and authentication algorithm is replaced by a single authenticated encryption algorithm, such as AES-GCM.
 
-For example, networks can (and some do) insert advertisements into unencrypted Web pages; by nature, this conveys the ability to track users. Even more hostile attacks include inserting persistent code into the browser that is run on subsequent visits ("cache poisoning"), or changing content (such as editing a company's Web site to affect its stock price).
+In 2013, CAESAR was announced. It is a worldwide cryptographic competition, focused on finding new methods of authenticated encryption, that offer advantages against commonly used AES-GCM and will be suitable for widespread adoption. Submitted algorithms will be publicly evaluated by committee of researchers in fields of cryptography and cryptoanalysis.
 
-An attacker can also access information that might have been stored by a site in previous visits. If this includes a persistent grant of access to a privileged APIs, such as geolocation [geolocation-API] or media capture [media-capture-api], then the attacker can access those resources using any prior authorization.
 
-Notably, these risks are just as present for users of "plain" Web sites as they are for those using more sophisticated, interactive sites.
-
-Also, if confidentiality is lost, something as simple as an image request "in the clear" (i.e., unencrypted) can give an attacker information about what the user is doing, opening an opportunity for further attacks -- again, even if the content being accessed seems innocuous.
-
-Finally, widespread attacks like Pervasive Monitoring [RFC7258] further erode users' trust in the Web -- whether they be activists, businesses or ordinary citizens.
-
-This leads us to a conclusion that server authentication and integrity are baseline requirements for the continued success of the Web. Furthermore, confidentiality -- while arguably not always strictly necessary -- is often needed. Since the necessity of confidentiality may only become apparent in hindsight, we should also consider it as being crucial to the continued success of the Web.
-
-Therefore, the TAG finds that:
-
-\begin{itemize}
-  \item The Web platform should be designed to \textbf{actively prefer secure communication} - typically, by encouraging use of "https://" URLs instead of "http://" ones (although exceptions like "localhost" do exist).
-  \item \textbf{Barriers to adopting "https://" should be removed} where feasible.
-  \item The \textbf{end-to-end nature of TLS encryption must not be compromised} on the Web, in order to preserve trust.
-\end{itemize}
-
-\url{http://www.w3.org/2001/tag/doc/web-https}
 
 \end{introduction}

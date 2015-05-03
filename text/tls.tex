@@ -2,7 +2,7 @@
 
 \input{figures/network-model.tex}
 
-TLS is a security protocol used in almost 100\% of secure Internet transactions. Essentially, TLS transforms a typical reliable transport protocol (such as TCP) into a secure communication channel suitable (see \autoref{toc/secure-channel}) for sending sensitive messages. TLS does not indicate which cryptographic algorithms need to be used. Instead of it, TLS serves as a framework establishing and maintaining a secure comminucation channel.
+TLS is a security protocol used in almost 100\% of secure Internet transactions. Essentially, TLS transforms a typical reliable transport protocol (such as TCP) into a secure communication channel suitable for sending sensitive messages. TLS does not dictate which cryptographic algorithms need to be used. Instead, TLS serves as a framework establishing and maintaining a secure comminucation channel, while new cryptographic algorithms can be implemented using a common interface.
 
 Adding encryption to an existing protocol is best performed in a transparent way, so that applications using the protocol library do not need to change their code to support encryption. A perfect example is HTTP protocol. A HTTP library can support both plaintext HTTP and encrypted HTTPS, and an application using this library can select the protocol simply in an URL, by specifying \textit{http://} or \textit{https://} respectively. See \autoref{figure/network-model}.
 

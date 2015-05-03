@@ -3,18 +3,13 @@
 
 Many applications desires to achieve both confidentiality and integrity goals by using some combination of encryption and authentication algorithm. However, securely combining them together is difficult, because it could lead to incorrect, error-prone combination.
 
-There are a few researched combinations of encryption and authentication, called Generic compositions: \textit{Encrypt-and-MAC} (E\&M), \textit{Encrypt-then-MAC} (EtM), \textit{MAC-then-Encrypt} (MtE). These combinations are successfully used in real-world software.
+There are a few researched combinations of encryption and authentication, called generic compositions: \textit{Encrypt-and-MAC} (E\&M), \textit{Encrypt-then-MAC} (EtM), \textit{MAC-then-Encrypt} (MtE). These combinations are successfully used in real-world software.
 
-More recently, the idea of providing both confidentiality and integrity goals using a single cryptosystem has become accepted. In this concept, the combination of encryption and authentication algorithm is replaced by a \textit{Authenticated Encryption} (AE) or \textit{Authenticated Encryption with Associated Data} (AEAD) algorithm.
+More recently, the idea of providing both confidentiality and integrity goals using a single cryptosystem has become accepted. In this concept, the combination of encryption and authentication algorithm is replaced by a single \textit{Authenticated Encryption} (AE) or \textit{Authenticated Encryption with Associated Data} (AEAD) algorithm.
 
-Authenticated Encryption (AE) is a form of encryption that, in addition to providing confidentiality for the plaintext that is encrypted, provides a way to check its integrity and authenticity. Decryption is combined in single step with integrity validation. These attributes are provided under a single, easy to use interface.
+Authenticated Encryption is a form of encryption that, in addition to providing confidentiality for the plaintext that is encrypted, provides a way to check its integrity and authenticity. Decryption is combined in single step with integrity validation. These attributes are provided under a single, easy to use interface.
 
 Application designers can benefit from using AE by allowing them to focus on real project needs, instead of designing their own cryptosystem. More importantly, the security of an AE algorithm can be analyzed independent from its use in a particular application. This property frees the user of the AE of the need to consider security aspects such as the relative order of encryption and authentication and the security of the particular combination of cipher and MAC.
-
-\begin{description}
-  \item[Confidentiality] ensures that data is available only to those authorized to obtain it. Usually it is realized using encryption.
-  \item[Integrity] ensures that data has not been undetectably altered or forged, and that the data has been sent only by authorized entities. Usually it is realized using authentication.
-\end{description}
 
 
 \subsection{Generic compositions}
@@ -30,14 +25,12 @@ The simpliest approach to design authenticated encryption schema is to combine a
   \item[MAC-then-Encrypt] A MAC is computed from the plaintext, then the plaintext and MAC are encrypted together to ciphertext. The ciphertext (containing encrypted plaintext and plaintext's MAC) is sent.
 \end{description}
 
-See \autoref{figure/generic-compositions-of-authenticated-encryption} for comparison.
+See \autoref{figure/generic-compositions} for comparison.
 
 All of them are used in real-world software - Encrypt-and-MAC in SSH, Encrypt-then-MAC in IPSec and MAC-then-Encrypt in TLS. However, recent research shows that only Encrypt-then-MAC schema is provably secure. \cite{generic-ae} \cite{generic-ae2}
 
-TLS reacts to these results and introduced optional Encrypt-then-MAC support, which can be negotiated by a specific a TLS extension as defined in RFC 7366\footnote{\url{https://tools.ietf.org/html/rfc7366}}.
-
 \subsection{Associated data}
 
-Authenticated Encryption with Associated Data (AEAD) adds the ability to check the integrity and authenticity of some Associated Data (AD), also called Additional Authenticated Data (AAD), that is not encrypted.
+Authenticated Encryption with Associated Data adds the ability to check the integrity and authenticity of some \textit{Associated Data} (AD), also called \textit{Additional Authenticated Data} (AAD), that is not encrypted and sent side by side with the ciphertext.
 
 Associated data can be for example TLS record header, to ensure that unencrypted data in the header can't be tampered with, and TLS record sequence number, to ensure that the messages can't be replayed.

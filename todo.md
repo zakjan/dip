@@ -1,8 +1,5 @@
 # TODO
 
-* Modern cryptography
-    * Authenticated encryption
-    * Secure communication channel
 * obecné
     * úvod
     * závěr

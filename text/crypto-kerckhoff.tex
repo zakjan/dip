@@ -1,7 +1,9 @@
 \section{Kerckhoffs' principle}
 \label{toc/kerckhoffs-principle}
 
-All crypto algorithms are preferred to be public. A well-known \textit{Kerckhoffs' principle} roughly says, that the security of the cryptosystem must depend only on the secrecy of the key, and not on the secrecy of the algorithm. They are very good reasons for this rule. Algorithms are hard to change. They are built into software or hardware, which can be difficult to upgrade. In real world, the same algorithm is used for a very long time. It is hard enough to keep the key secret, keeping the algorithm secret is far more difficult and expensive.
+In the modern era of cryptography, crypto algorithms are preferred to be public. A well-known \textit{Kerckhoffs' principle} roughly says, that the security of the cryptosystem must depend only on the secrecy of the key, and not on the secrecy of the algorithm.
+
+There are very good reasons for this rule. Algorithms are hard to change. They are built into software or hardware, which can be difficult to upgrade. In real world, the same algorithm is used for a very long time. It is hard enough to keep the key secret, keeping the algorithm secret is far more difficult and expensive.
 
 From past we know that it is very easy to make a small mistake and create cryptographic algorithm that is weak. If the algorithm is secret, nobody will find this fault until the attacker tries to break it. On the other hand, if the algorithm is public, researchers worldwide can participate in analyzing and improving the algorithm and its implementations. Thus if the algorithm is kept secret, for example by a private company saying that their algorithm is unbreakable, you shouldn't trust it.
 
